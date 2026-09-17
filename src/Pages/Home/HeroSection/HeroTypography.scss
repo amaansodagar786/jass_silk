@@ -1,0 +1,213 @@
+$ivory: #F5F1EA;
+$onyx: #1A1A1A;
+$gold: #C9A66B;
+$blush: #E8D5C4;
+
+$font-heading: "Sora", sans-serif;
+$font-body: "Kanit", sans-serif;
+
+.js-hero-typo {
+    position: relative;
+    min-height: 100dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: $onyx;
+
+    &__bg {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        background: linear-gradient(120deg, $ivory 0%, $blush 45%, $ivory 75%, $gold 130%);
+        background-size: 260% 260%;
+        animation: js-hero-typo-drift 18s ease-in-out infinite;
+        opacity: 1;
+    }
+
+    &__slides {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+    }
+
+    // one layer per slide, stacked — clip-path + scale are driven by GSAP
+    // inline styles once JS boots up. These CSS defaults are the real
+    // guarantee though: the first slide is ALWAYS fully open and on top,
+    // every other slide ALWAYS starts hidden, no matter how JS timing
+    // plays out (StrictMode double-effects, slow hydration, etc.) — so
+    // there is never a frame where an image slide can cover the intro
+    // before its own turn.
+    &__slide {
+        position: absolute;
+        inset: 0;
+        will-change: clip-path, transform;
+        transform-origin: center;
+        clip-path: polygon(-40% 0%, -10% 0%, -40% 100%, -70% 100%);
+        z-index: 0;
+
+        &:first-child {
+            clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+            z-index: 2;
+        }
+    }
+
+    &__slide-media {
+        display: block;
+        width: 100%;
+        height: 100%;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+    }
+
+    &__inner {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 0 24px;
+        max-width: 900px;
+        margin: 0 auto;
+        height: 100%;
+        justify-content: center;
+    }
+
+    &__headline {
+        margin: 0;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        font-family: $font-heading;
+        font-weight: 700;
+        font-size: clamp(2.8rem, 9vw, 7.5rem);
+        letter-spacing: 0.01em;
+        line-height: 0.95;
+        color: $onyx;
+    }
+
+    &__letter-wrap {
+        display: inline-block;
+        overflow: hidden;
+    }
+
+    &__letter {
+        display: inline-block;
+        will-change: transform, opacity;
+    }
+
+    &__rule {
+        display: block;
+        width: 120px;
+        height: 1px;
+        background: $gold;
+        transform-origin: center;
+        margin: 28px 0 26px;
+    }
+
+    &__tagline {
+        font-family: $font-body;
+        font-weight: 300;
+        font-size: 1.05rem;
+        letter-spacing: 0.02em;
+        color: rgba($onyx, 0.7);
+        margin: 0 0 34px;
+    }
+
+    &__cta {
+        font-family: $font-body;
+        font-weight: 400;
+        font-size: 0.85rem;
+        letter-spacing: 0.03em;
+        color: $ivory;
+        background: $onyx;
+        padding: 15px 36px;
+        text-decoration: none;
+        border-radius: 2px;
+        position: relative;
+        overflow: hidden;
+        z-index: 0;
+
+        &::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: $gold;
+            transform: translateX(-101%);
+            transition: transform 0.35s ease;
+            z-index: -1;
+        }
+
+        &:hover::before {
+            transform: translateX(0);
+        }
+    }
+}
+
+@keyframes js-hero-typo-drift {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+// Tablet
+@media (max-width: 1024px) {
+    .js-hero-typo {
+        &__rule {
+            width: 90px;
+            margin: 22px 0 20px;
+        }
+    }
+}
+
+// Mobile — shorter hero, own image crops (handled via <picture> in JSX)
+@media (max-width: 600px) {
+    .js-hero-typo {
+        height: 72svh;
+        min-height: 72svh;
+
+        &__inner {
+            padding: 0 20px;
+        }
+
+        &__tagline {
+            font-size: 0.95rem;
+            margin-bottom: 28px;
+        }
+
+        &__cta {
+            padding: 14px 30px;
+            font-size: 0.8rem;
+        }
+
+        &__rule {
+            width: 70px;
+            margin: 18px 0 18px;
+        }
+    }
+}
+
+// Respect reduced motion — freeze on whichever slide is open, no wipes
+@media (prefers-reduced-motion: reduce) {
+    .js-hero-typo__bg {
+        animation: none;
+    }
+
+    .js-hero-typo__slide {
+        transition: none !important;
+    }
+}

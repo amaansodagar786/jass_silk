@@ -1,0 +1,163 @@
+$ivory: #F5F1EA;
+$onyx: #1A1A1A;
+$gold: #C9A66B;
+$blush: #E8D5C4;
+
+$font-heading: "Sora", sans-serif;
+$font-body: "Kanit", sans-serif;
+
+.js-craft {
+    background: $ivory;
+    padding: 60px 48px;
+    border-top: 2px solid $gold;
+
+    &__head {
+        max-width: 640px;
+        margin: 0 auto 72px;
+        text-align: center;
+    }
+
+    &__eyebrow {
+        display: block;
+        font-family: $font-body;
+        font-weight: 300;
+        font-size: 0.78rem;
+        letter-spacing: 0.05em;
+        color: rgba($onyx, 0.5);
+        margin-bottom: 12px;
+    }
+
+    &__title {
+        margin: 0 0 18px;
+        font-family: $font-heading;
+        font-weight: 600;
+        font-size: clamp(1.8rem, 3vw, 2.6rem);
+        color: $onyx;
+    }
+
+    &__intro {
+        margin: 0;
+        font-family: $font-body;
+        font-weight: 300;
+        font-size: 1rem;
+        line-height: 1.6;
+        color: rgba($onyx, 0.65);
+    }
+
+    &__grid {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 28px;
+    }
+
+    &__card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 36px 20px;
+        border: 1px solid rgba($onyx, 0.1);
+        border-radius: 2px;
+        background: $ivory;
+        transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+            border-color 0.4s ease,
+            box-shadow 0.4s ease;
+
+        &:hover {
+            transform: translateY(-8px);
+            border-color: $gold;
+            box-shadow: 0 24px 40px -20px rgba($onyx, 0.18);
+        }
+
+        // Image zoom on hover
+        &:hover .js-craft__icon img {
+            transform: scale(1.08);
+        }
+
+        &:hover .js-craft__icon {
+            border-color: $gold;
+            box-shadow: 0 0 0 4px rgba($gold, 0.15);
+        }
+    }
+
+    // Circular image frame (was an SVG holder)
+    &__icon {
+        width: 88px;
+        height: 88px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 1px solid rgba($gold, 0.35);
+        margin-bottom: 22px;
+        background: $blush;
+        transition: border-color 0.4s ease, box-shadow 0.4s ease;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+    }
+
+    &__name {
+        font-family: $font-heading;
+        font-weight: 500;
+        font-size: 1.15rem;
+        color: $onyx;
+        margin-bottom: 10px;
+    }
+
+    &__desc {
+        margin: 0;
+        font-family: $font-body;
+        font-weight: 300;
+        font-size: 0.85rem;
+        line-height: 1.55;
+        color: rgba($onyx, 0.6);
+    }
+}
+
+// Tablet
+@media (max-width: 1024px) {
+    .js-craft {
+        padding: 96px 32px;
+
+        &__grid {
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+    }
+}
+
+// Small tablet / large mobile
+@media (max-width: 720px) {
+    .js-craft__grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+// Mobile
+@media (max-width: 480px) {
+    .js-craft {
+        padding: 72px 20px;
+
+        &__head {
+            margin-bottom: 48px;
+        }
+
+        &__grid {
+            grid-template-columns: 1fr;
+            gap: 18px;
+        }
+
+        &__card {
+            padding: 32px 20px;
+        }
+    }
+}
