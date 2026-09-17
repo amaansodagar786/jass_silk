@@ -142,12 +142,17 @@ $nav-height-mobile: 64px;
 
     &__logo {
         justify-self: center;
-        font-family: $font-heading;
-        font-weight: 600;
-        font-size: 1.5rem;
-        letter-spacing: 0.02em;
-        color: $onyx;
+        display: inline-flex;
+        align-items: center;
         text-decoration: none;
+
+        img {
+            display: block;
+            height: 42px;
+            width: auto;
+            object-fit: contain;
+             filter: brightness(0) saturate(100%);
+        }
     }
 
     // Right side container — holds CTA + burger
@@ -346,20 +351,21 @@ $nav-height-mobile: 64px;
     }
 }
 
-// Mobile
 @media (max-width: 600px) {
     .js-nav {
         height: $nav-height-mobile;
 
         &__inner {
             padding: 0 18px;
-            // Stack logo left, burger right on mobile
             grid-template-columns: 1fr auto;
         }
 
         &__logo {
             justify-self: start;
-            font-size: 1.25rem;
+
+            img {
+                height: 32px;
+            }
         }
 
         &__right {

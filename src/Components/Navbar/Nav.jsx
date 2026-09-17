@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import "./Nav.scss";
+import logo from "../../assets/images/logo/logo.png";
 
 // Dummy product data — replace with real data later
 const PRODUCTS = [
@@ -83,7 +84,9 @@ export default function Nav() {
                     </div>
 
                     {/* Center: logo */}
-                    <a href="/" className="js-nav__logo">Jass Silk</a>
+                    <a href="/" className="js-nav__logo" aria-label="Jass Silk — Home">
+                        <img src={logo} alt="Jass Silk" />
+                    </a>
 
                     {/* Right: Buy Now CTA (desktop) + Mobile hamburger */}
                     <div className="js-nav__right">

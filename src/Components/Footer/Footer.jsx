@@ -5,6 +5,8 @@ import {
 } from "react-icons/fa6";
 import "./Footer.scss";
 
+import logo from "../../assets/images/logo/logo.png";
+
 // Dummy data — replace with real data later
 const PRODUCTS = [
     { id: "silk-noir", name: "Silk Noir", note: "Amber · Oud" },
@@ -59,7 +61,9 @@ export default function Footer() {
             <div className="js-footer__top">
                 {/* Logo column */}
                 <div className="js-footer__col js-footer__col--brand">
-                    <span className="js-footer__logo">Jass Silk</span>
+                    <a href="/" className="js-footer__logo" aria-label="Jass Silk — Home">
+                        <img src={logo} alt="Jass Silk" />
+                    </a>
                     <p className="js-footer__tagline">
                         Woven from silk, worn as scent.<br />
                         Six notes, one thread of intention.
@@ -77,7 +81,6 @@ export default function Footer() {
                             <li key={p.id} className="js-footer__product">
                                 <a href={`/product/${p.id}`}>
                                     <span className="js-footer__product-name">{p.name}</span>
-                                    <span className="js-footer__product-note">{p.note}</span>
                                 </a>
                             </li>
                         ))}
@@ -92,11 +95,11 @@ export default function Footer() {
                     <ul className="js-footer__contact-list">
                         <li>
                             <FaLocationDot className="js-footer__contact-icon" />
-                            <span>42 Silk Route, Ahmedabad, Gujarat</span>
+                            <span>Alkapuri, Vadodara, Gujarat</span>
                         </li>
                         <li>
                             <FaEnvelope className="js-footer__contact-icon" />
-                            <a href="mailto:hello@jasssilk.com">hello@jasssilk.com</a>
+                            <a href="mailto:hello@jassperfumes.com">info@jassperfumes.com</a>
                         </li>
                         <li>
                             <FaPhone className="js-footer__contact-icon" />
@@ -114,8 +117,10 @@ export default function Footer() {
 
             <div className="js-footer__bottom">
                 <span className="js-footer__copy">
-                    © {new Date().getFullYear()} Jass Perfumes. All rights reserved. Design &amp; Developed by{" "}
-                    <a href="#">Techorses</a>
+                    © {new Date().getFullYear()} Jass Perfumes. All rights reserved.
+                </span>
+                <span className="js-footer__credit">
+                    Design &amp; Developed by <a href="#">Techorses</a>
                 </span>
             </div>
         </footer>

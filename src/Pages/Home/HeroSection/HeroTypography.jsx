@@ -2,8 +2,10 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import "./HeroTypography.scss";
 
-import desktop_hero from "../../../assets/images/hero/img.png"
+import desktop_hero from "../../../assets/images/hero/desktop_hero.png"
 import mobile_hero from "../../../assets/images/hero/mobile_hero.png"
+import desktop_hero2 from "../../../assets/images/hero/desktop_hero2.png"
+import mobile_hero2 from "../../../assets/images/hero/mobile_hero2.png"
 
 const HEADLINE = "JASS SILK";
 const AUTOPLAY_MS = 5000;
@@ -25,9 +27,9 @@ const SLIDES = [
         key: "amber",
         type: "image",
         desktop:
-            desktop_hero,
+            desktop_hero2,
         mobile:
-            mobile_hero,
+            mobile_hero2,
     },
     {
         key: "musk",

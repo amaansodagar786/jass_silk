@@ -48,7 +48,7 @@ $blush: #E8D5C4;
     }
 
     &:hover &__icon {
-        transform: translateY(-4px);
+        // transform: translateY(-4px);
         color: $ivory;
     }
 
@@ -70,7 +70,7 @@ $blush: #E8D5C4;
 // Mobile — tighten the offset
 @media (max-width: 600px) {
     .js-backtotop {
-        left: 16px;
+        right: 16px;
         bottom: 16px;
         width: 42px;
         height: 42px;
