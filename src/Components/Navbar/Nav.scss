@@ -44,7 +44,7 @@ $nav-height-mobile: 64px;
     &__collection-btn {
         font-family: $font-body;
         font-weight: 300;
-        font-size: 0.85rem;
+        font-size: 1.05rem; // increased from 0.85rem
         letter-spacing: 0.02em;
         color: $onyx;
         background: none;
@@ -150,8 +150,15 @@ $nav-height-mobile: 64px;
         text-decoration: none;
     }
 
-    &__cta {
+    // Right side container — holds CTA + burger
+    &__right {
         justify-self: end;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+    }
+
+    &__cta {
         font-family: $font-body;
         font-weight: 400;
         font-size: 0.8rem;
@@ -182,7 +189,6 @@ $nav-height-mobile: 64px;
 
     &__burger {
         display: none;
-        justify-self: end;
         width: 28px;
         height: 20px;
         position: relative;
@@ -329,12 +335,11 @@ $nav-height-mobile: 64px;
             display: none;
         }
 
-        // hover strip doesn't suit touch — folded into overlay
+        // hide desktop CTA, show burger
         &__cta {
             display: none;
         }
 
-        // CTA moves into overlay on tablet too
         &__burger {
             display: block;
         }
@@ -348,10 +353,17 @@ $nav-height-mobile: 64px;
 
         &__inner {
             padding: 0 18px;
+            // Stack logo left, burger right on mobile
+            grid-template-columns: 1fr auto;
         }
 
         &__logo {
+            justify-self: start;
             font-size: 1.25rem;
+        }
+
+        &__right {
+            justify-self: end;
         }
     }
 

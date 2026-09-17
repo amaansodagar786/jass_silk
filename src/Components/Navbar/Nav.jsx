@@ -41,7 +41,7 @@ export default function Nav() {
         <>
             <header className={`js-nav ${scrolled ? "js-nav--solid" : ""}`}>
                 <div className="js-nav__inner">
-                    {/* Left: menu trigger (desktop = collection hover/click, mobile = hamburger) */}
+                    {/* Left: menu trigger (desktop = collection hover/click) */}
                     <div
                         className="js-nav__left"
                         onMouseEnter={openStrip}
@@ -85,19 +85,19 @@ export default function Nav() {
                     {/* Center: logo */}
                     <a href="/" className="js-nav__logo">Jass Silk</a>
 
-                    {/* Right: Buy Now CTA (desktop) */}
-                    <a href="#products" className="js-nav__cta">Buy Now</a>
-
-                    {/* Mobile hamburger */}
-                    <button
-                        className={`js-nav__burger ${mobileOpen ? "js-nav__burger--open" : ""}`}
-                        onClick={() => setMobileOpen((v) => !v)}
-                        aria-label="Toggle menu"
-                        aria-expanded={mobileOpen}
-                    >
-                        <span />
-                        <span />
-                    </button>
+                    {/* Right: Buy Now CTA (desktop) + Mobile hamburger */}
+                    <div className="js-nav__right">
+                        <a href="#products" className="js-nav__cta">Buy Now</a>
+                        <button
+                            className={`js-nav__burger ${mobileOpen ? "js-nav__burger--open" : ""}`}
+                            onClick={() => setMobileOpen((v) => !v)}
+                            aria-label="Toggle menu"
+                            aria-expanded={mobileOpen}
+                        >
+                            <span />
+                            <span />
+                        </button>
+                    </div>
                 </div>
             </header>
 

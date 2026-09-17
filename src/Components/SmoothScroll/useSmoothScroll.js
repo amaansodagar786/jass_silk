@@ -47,9 +47,12 @@ export default function useSmoothScroll() {
         });
         gsap.ticker.lagSmoothing(0);
 
+        window.lenis = lenis;
+
         return () => {
             lenis.destroy();
             gsap.ticker.remove(lenis.raf);
+            delete window.lenis;
         };
     }, []);
 }

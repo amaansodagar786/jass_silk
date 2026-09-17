@@ -94,6 +94,7 @@ $font-body: "Kanit", sans-serif;
         overflow: hidden;
         border-radius: 2px;
         background: $onyx;
+        border: 1.5px solid $gold;
 
         img {
             width: 100%;
@@ -101,6 +102,7 @@ $font-body: "Kanit", sans-serif;
             object-fit: cover;
             display: block;
             transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+            
         }
     }
 
@@ -112,13 +114,14 @@ $font-body: "Kanit", sans-serif;
         font-weight: 400;
         font-size: 0.78rem;
         letter-spacing: 0.03em;
-        color: $ivory;
+        color: $gold;
         padding: 9px 18px;
-        border: 1px solid rgba($ivory, 0.6);
+        border: 1px solid rgba($gold, 0.9);
         border-radius: 2px;
         opacity: 0;
         transform: translateY(10px);
         transition: opacity 0.35s ease, transform 0.35s ease, background 0.3s ease, color 0.3s ease;
+        background: white ; 
     }
 
     &__card:hover &__media img {

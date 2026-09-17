@@ -7,6 +7,7 @@ import ScrollToTop from "./Components/GoToTop/ScrollToTop";
 import Home from "./Pages/Home/Home";
 import Nav from "./Components/Navbar/Nav";
 import Footer from "./Components/Footer/Footer";
+import BackToTop from "./Components/BackToTop/BackToTop";
 
 
 
@@ -18,12 +19,13 @@ function App() {
     <Router>
       <ScrollToTop />
       <div>
-        <Nav/>
+        <Nav />
         <Routes>
           <Route path="/" element={<Home />} />
 
         </Routes>
-        <Footer/>
+        <Footer />
+        <BackToTop />
       </div>
     </Router>
   );

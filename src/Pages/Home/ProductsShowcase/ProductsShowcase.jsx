@@ -5,17 +5,21 @@ import { FaArrowLeftLong, FaArrowRightLong } from "react-icons/fa6";
 import "swiper/css";
 import "./ProductsShowcase.scss";
 
-const IMG_A = "https://images.unsplash.com/photo-1709662369900-130507781728?w=900&q=80&auto=format&fit=crop";
-const IMG_B = "https://images.unsplash.com/photo-1709662369957-0cbf9f8452fc?w=900&q=80&auto=format&fit=crop";
+import product1 from "../../../assets/images/products/product1.png";
+import product2 from "../../../assets/images/products/product2.png";
+import product3 from "../../../assets/images/products/product3.png";
+import product4 from "../../../assets/images/products/product4.png";
+import product5 from "../../../assets/images/products/product5.png";
+import product6 from "../../../assets/images/products/product6.png";
 
 // Dummy data — replace with real products + individual photos later
 const PRODUCTS = [
-    { id: "silk-noir", name: "Silk Noir", note: "Amber · Oud", img: IMG_A },
-    { id: "silk-bloom", name: "Silk Bloom", note: "Jasmine · Musk", img: IMG_B },
-    { id: "silk-dawn", name: "Silk Dawn", note: "Citrus · Cedar", img: IMG_A },
-    { id: "silk-velvet", name: "Silk Velvet", note: "Vanilla · Sandalwood", img: IMG_B },
-    { id: "silk-mirage", name: "Silk Mirage", note: "Bergamot · Iris", img: IMG_A },
-    { id: "silk-ember", name: "Silk Ember", note: "Spice · Leather", img: IMG_B },
+    { id: "silk-noir", name: "Silk Noir", note: "Amber · Oud", img: product1 },
+    { id: "silk-bloom", name: "Silk Bloom", note: "Jasmine · Musk", img: product2 },
+    { id: "silk-dawn", name: "Silk Dawn", note: "Citrus · Cedar", img: product3 },
+    { id: "silk-velvet", name: "Silk Velvet", note: "Vanilla · Sandalwood", img: product4 },
+    { id: "silk-mirage", name: "Silk Mirage", note: "Bergamot · Iris", img: product5 },
+    { id: "silk-ember", name: "Silk Ember", note: "Spice · Leather", img: product6 },
 ];
 
 export default function ProductsShowcase() {

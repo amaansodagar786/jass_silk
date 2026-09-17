@@ -2,6 +2,9 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import "./HeroTypography.scss";
 
+import desktop_hero from "../../../assets/images/hero/img.png"
+import mobile_hero from "../../../assets/images/hero/mobile_hero.png"
+
 const HEADLINE = "JASS SILK";
 const AUTOPLAY_MS = 5000;
 
@@ -14,25 +17,25 @@ const SLIDES = [
         key: "citrus",
         type: "image",
         desktop:
-            "https://images.unsplash.com/photo-1621275155732-2bff82c64fd2?w=1800&q=80&auto=format&fit=crop",
+            desktop_hero,
         mobile:
-            "https://images.unsplash.com/photo-1694422789021-54bd74b39f52?w=900&h=1200&q=80&auto=format&fit=crop&crop=entropy",
+            mobile_hero,
     },
     {
         key: "amber",
         type: "image",
         desktop:
-            "https://images.unsplash.com/photo-1589493732575-11a963a7c415?w=1800&q=80&auto=format&fit=crop",
+            desktop_hero,
         mobile:
-            "https://images.unsplash.com/photo-1709662369957-0cbf9f8452fc?w=900&h=1200&q=80&auto=format&fit=crop&crop=entropy",
+            mobile_hero,
     },
     {
         key: "musk",
         type: "image",
         desktop:
-            "https://images.unsplash.com/photo-1584841247175-4d766cefa018?w=1800&q=80&auto=format&fit=crop",
+            desktop_hero,
         mobile:
-            "https://images.unsplash.com/photo-1584841247175-4d766cefa018?w=900&h=1200&q=80&auto=format&fit=crop&crop=entropy",
+            mobile_hero,
     },
 ];
 

@@ -3,6 +3,10 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import "./SignatureHighlight.scss";
 
+import img1 from "../../../assets/images/slide1.png";
+import img2 from "../../../assets/images/slide2.png";
+import img3 from "../../../assets/images/slide3.png";
+
 gsap.registerPlugin(ScrollTrigger);
 
 // how much space to leave at top for the fixed/sticky nav while pinned
@@ -15,24 +19,21 @@ const STAGES = [
     label: "Top Notes",
     notes: "Citrus · Bergamot",
     tint: "#E8D5C4",
-    image:
-      "https://images.unsplash.com/photo-1621275155732-2bff82c64fd2?w=1400&q=80&auto=format&fit=crop",
+    image: img1,
   },
   {
     key: "heart",
     label: "Heart Notes",
     notes: "Jasmine · Amber",
     tint: "#C9A66B",
-    image:
-      "https://images.unsplash.com/photo-1589493732575-11a963a7c415?w=1400&q=80&auto=format&fit=crop",
+    image: img2,
   },
   {
     key: "base",
     label: "Base Notes",
     notes: "Musk · Sandalwood",
     tint: "#1A1A1A",
-    image:
-      "https://images.unsplash.com/photo-1584841247175-4d766cefa018?w=1400&q=80&auto=format&fit=crop",
+    image: img3,
   },
 ];
 

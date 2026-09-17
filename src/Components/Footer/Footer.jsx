@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import {
     FaInstagram, FaPinterestP, FaXTwitter,
-    FaLocationDot, FaEnvelope, FaPhone, FaArrowUp,
+    FaLocationDot, FaEnvelope, FaPhone,
 } from "react-icons/fa6";
 import "./Footer.scss";
 
@@ -50,27 +50,6 @@ function ThreadDivider() {
                 />
             ))}
         </svg>
-    );
-}
-
-// Circular, rotating-ring back-to-top control
-function BackToTop() {
-    const scrollToTop = (e) => {
-        e.preventDefault();
-        if (typeof window !== "undefined" && window.lenis) {
-            window.lenis.scrollTo(0, { duration: 1.2 });
-        } else {
-            window.scrollTo({ top: 0, behavior: "smooth" });
-        }
-    };
-
-    return (
-        <button className="js-footer__totop" onClick={scrollToTop} aria-label="Back to top">
-            <svg className="js-footer__totop-ring" viewBox="0 0 44 44" aria-hidden="true">
-                <circle cx="22" cy="22" r="20.5" />
-            </svg>
-            <FaArrowUp className="js-footer__totop-icon" />
-        </button>
     );
 }
 
@@ -135,12 +114,9 @@ export default function Footer() {
 
             <div className="js-footer__bottom">
                 <span className="js-footer__copy">
-                    © {new Date().getFullYear()} Jass Perfumes. All rights reserved.
+                    © {new Date().getFullYear()} Jass Perfumes. All rights reserved. Design &amp; Developed by{" "}
+                    <a href="#">Techorses</a>
                 </span>
-                <span className="js-footer__credit">
-                    Design &amp; Developed by <a href="#">Techorses</a>
-                </span>
-                <BackToTop />
             </div>
         </footer>
     );

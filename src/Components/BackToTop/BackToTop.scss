@@ -1,0 +1,85 @@
+$ivory: #F5F1EA;
+$onyx: #1A1A1A;
+$gold: #C9A66B;
+$blush: #E8D5C4;
+
+.js-backtotop {
+    position: fixed;
+    right: 28px;
+    bottom: 28px;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba($onyx, 0.85);
+    backdrop-filter: blur(6px);
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 90; // below nav (100), above content
+    transition: background 0.3s ease;
+
+    &:hover {
+        background: $onyx;
+    }
+
+    &__ring {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        animation: js-backtotop-spin 9s linear infinite;
+
+        circle {
+            fill: none;
+            stroke: rgba($gold, 0.55);
+            stroke-width: 1;
+            stroke-dasharray: 4 7;
+        }
+    }
+
+    &__icon {
+        color: $gold;
+        font-size: 0.9rem;
+        transition: transform 0.3s ease, color 0.3s ease;
+        position: relative;
+        z-index: 1;
+    }
+
+    &:hover &__icon {
+        transform: translateY(-4px);
+        color: $ivory;
+    }
+
+    &:hover &__ring {
+        animation-duration: 2.5s;
+    }
+}
+
+@keyframes js-backtotop-spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+// Mobile — tighten the offset
+@media (max-width: 600px) {
+    .js-backtotop {
+        left: 16px;
+        bottom: 16px;
+        width: 42px;
+        height: 42px;
+    }
+}
+
+// Respect reduced motion
+@media (prefers-reduced-motion: reduce) {
+    .js-backtotop__ring {
+        animation: none;
+    }
+}
