@@ -28,6 +28,17 @@ $font-body: "Kanit", sans-serif;
         }
     }
 
+    // Crossfade slide layers — stacked, absolutely positioned, opacity/scale
+    // animated via GSAP (see goToImage). No clip-path, so nothing to glitch.
+    &__slide-img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        will-change: opacity, transform;
+    }
+
     &__dots {
         position: absolute;
         left: 50%;
@@ -36,20 +47,6 @@ $font-body: "Kanit", sans-serif;
         display: flex;
         gap: 10px;
         z-index: 2;
-    }
-
-    &__wipe {
-        position: absolute;
-        top: -10%;
-        left: -15%;
-        width: 130%;
-        height: 120%;
-        z-index: 3;
-        background: $onyx;
-        clip-path: polygon(0 0, 88% 0, 100% 100%, 12% 100%);
-        transform: translateX(-130%);
-        pointer-events: none;
-        box-shadow: 6px 0 30px rgba($gold, 0.2);
     }
 
     &__arrows {
@@ -231,7 +228,7 @@ $font-body: "Kanit", sans-serif;
         color: rgba($onyx, 0.68);
     }
 
-    // Flip cards
+    // Flip cards (desktop only — see media queries below)
     &__flips {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -306,6 +303,53 @@ $font-body: "Kanit", sans-serif;
         }
     }
 
+    // Mobile info blocks — plain, always-visible content (no flip/tap)
+    // Hidden on desktop by default; shown only under the mobile breakpoint below
+    &__mobile-info {
+        display: none;
+    }
+
+    &__mobile-info-item {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+        padding: 14px 0;
+
+        &+& {
+            border-top: 1px solid rgba($onyx, 0.1);
+        }
+
+        h3 {
+            margin: 0 0 4px;
+            font-family: $font-heading;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: $onyx;
+        }
+
+        p {
+            margin: 0;
+            font-family: $font-body;
+            font-weight: 300;
+            font-size: 0.78rem;
+            line-height: 1.5;
+            color: rgba($onyx, 0.68);
+        }
+    }
+
+    &__mobile-info-icon {
+        flex-shrink: 0;
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba($gold, 0.15);
+        color: $gold;
+        font-size: 0.9rem;
+    }
+
     // Spec boxes with icons
     &__specs {
         display: grid;
@@ -325,12 +369,21 @@ $font-body: "Kanit", sans-serif;
         padding: 28px 14px;
         border: 1px solid rgba($onyx, 0.1);
         border-radius: 2px;
-        transition: transform 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+        transition: transform 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease, background 0.35s ease;
 
         &:hover {
             transform: translateY(-6px);
             border-color: $gold;
             box-shadow: 0 20px 34px -20px rgba($onyx, 0.2);
+        }
+
+        // Alternating backgrounds across the 6 cards
+        &--a {
+            background: $ivory;
+        }
+
+        &--b {
+            background: $blush;
         }
     }
 
@@ -424,21 +477,23 @@ $font-body: "Kanit", sans-serif;
             margin: 0;
             padding: 28px 20px;
             border-radius: 0;
+            box-shadow: none;
         }
 
-        &__flips {
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
+        // Swap: hide desktop flip cards, show plain mobile info blocks
+        &__flips--desktop {
+            display: none;
         }
 
-        &__flip {
-            height: 88px;
+        &__mobile-info {
+            display: block;
+            margin-top: 8px;
         }
 
         &__specs {
             grid-template-columns: repeat(3, 1fr);
-            margin: 56px 0;
-            padding: 0 20px;
+            margin: 56px 0 0;
+            padding: 0 20px  30px;
             gap: 10px;
         }
 
