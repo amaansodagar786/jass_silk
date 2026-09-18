@@ -184,6 +184,7 @@ $font-body: "Kanit", sans-serif;
     &__gallery-frame {
         overflow: hidden;
         border-radius: 2px;
+        border: 1px solid $gold;
 
         &:nth-child(1) {
             grid-column: 1 / 5;
@@ -220,6 +221,7 @@ $font-body: "Kanit", sans-serif;
             height: 100%;
             object-fit: cover;
             display: block;
+            
         }
     }
 
