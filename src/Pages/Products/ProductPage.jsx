@@ -129,8 +129,8 @@ export default function ProductPage() {
 
             {/* ---------- categories, scattered tags ---------- */}
             <section className="js-product__categories js-reveal" aria-label="Categories">
-                {PRODUCT.categories.map((cat, i) => (
-                    <span className="js-product__tag" key={cat} style={{ "--i": i }}>
+                {PRODUCT.categories.map((cat) => (
+                    <span className="js-product__tag" key={cat}>
                         {cat}
                     </span>
                 ))}

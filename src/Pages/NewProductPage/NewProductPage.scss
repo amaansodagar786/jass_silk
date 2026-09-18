@@ -1,0 +1,455 @@
+$ivory: #F5F1EA;
+$onyx: #1A1A1A;
+$gold: #C9A66B;
+$blush: #E8D5C4;
+
+$font-heading: "Sora", sans-serif;
+$font-body: "Kanit", sans-serif;
+
+.js-new-product {
+    background: $ivory;
+    padding-top: 84px; // clears fixed nav
+
+    &__hero {
+        position: relative;
+    }
+
+    &__image-wrap {
+        position: relative;
+        height: 82vh;
+        overflow: hidden;
+        background: $onyx;
+
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+    }
+
+    &__dots {
+        position: absolute;
+        left: 50%;
+        bottom: 28px;
+        transform: translateX(-50%);
+        display: flex;
+        gap: 10px;
+        z-index: 2;
+    }
+
+    &__wipe {
+        position: absolute;
+        top: -10%;
+        left: -15%;
+        width: 130%;
+        height: 120%;
+        z-index: 3;
+        background: $onyx;
+        clip-path: polygon(0 0, 88% 0, 100% 100%, 12% 100%);
+        transform: translateX(-130%);
+        pointer-events: none;
+        box-shadow: 6px 0 30px rgba($gold, 0.2);
+    }
+
+    &__arrows {
+        position: absolute;
+        top: 24px;
+        right: 24px;
+        z-index: 2;
+        display: flex;
+        gap: 10px;
+    }
+
+    &__arrow {
+        width: 42px;
+        height: 42px;
+        border-radius: 50%;
+        border: 1px solid rgba($ivory, 0.5);
+        background: rgba($ivory, 0.12);
+        backdrop-filter: blur(6px);
+        color: $ivory;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 0.85rem;
+        transition: background 0.3s ease, transform 0.25s ease;
+
+        &:hover {
+            background: $gold;
+            color: $onyx;
+            transform: translateY(-2px);
+        }
+    }
+
+    &__dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        border: none;
+        background: rgba($ivory, 0.4);
+        cursor: pointer;
+        padding: 0;
+        transition: background 0.3s ease, transform 0.3s ease;
+
+        &--active {
+            background: $gold;
+            transform: scale(1.4);
+        }
+    }
+
+    // Floating price + buy pill, sits on the image
+    &__buy-pill {
+        position: absolute;
+        left: 32px;
+        bottom: 28px;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        background: rgba($ivory, 0.92);
+        backdrop-filter: blur(8px);
+        border-radius: 40px;
+        padding: 6px;
+        text-decoration: none;
+        box-shadow: 0 20px 40px -16px rgba($onyx, 0.4);
+        transition: box-shadow 0.35s ease;
+
+        &:hover {
+            box-shadow: 0 24px 50px -14px rgba($onyx, 0.5);
+        }
+
+        &:hover .js-new-product__buy-pill-cta {
+            padding-right: 22px;
+        }
+
+        &:hover svg {
+            transform: translateX(4px);
+        }
+    }
+
+    &__buy-pill-price {
+        font-family: $font-heading;
+        font-weight: 600;
+        font-size: 0.95rem;
+        color: $onyx;
+        padding: 0 16px;
+
+        em {
+            display: block;
+            font-style: normal;
+            font-family: $font-body;
+            font-weight: 300;
+            font-size: 0.68rem;
+            color: rgba($onyx, 0.45);
+            text-decoration: line-through;
+        }
+    }
+
+    &__buy-pill-cta {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-family: $font-body;
+        font-weight: 400;
+        font-size: 0.8rem;
+        letter-spacing: 0.02em;
+        color: $ivory;
+        background: $onyx;
+        padding: 12px 18px;
+        border-radius: 30px;
+        transition: padding 0.3s ease;
+
+        svg {
+            font-size: 0.75rem;
+            transition: transform 0.3s ease;
+        }
+    }
+
+    // Floating glass info card — overlaps the image on desktop
+    &__glass {
+        position: relative;
+        z-index: 3;
+        max-width: 460px;
+        margin-left: auto;
+        margin-right: 6vw;
+        margin-top: -140px;
+        padding: 40px;
+        background: rgba($ivory, 0.72);
+        backdrop-filter: blur(18px);
+        border: 1px solid rgba($ivory, 0.5);
+        border-radius: 4px;
+        box-shadow: 0 30px 60px -24px rgba($onyx, 0.3);
+    }
+
+    &__categories {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-bottom: 18px;
+    }
+
+    &__pill {
+        font-family: $font-body;
+        font-weight: 300;
+        font-size: 0.7rem;
+        letter-spacing: 0.03em;
+        color: $onyx;
+        background: rgba($gold, 0.18);
+        border: 1px solid rgba($gold, 0.5);
+        padding: 5px 13px;
+        border-radius: 20px;
+    }
+
+    &__name {
+        display: inline-block;
+        margin: 0 12px 6px 0;
+        font-family: $font-heading;
+        font-weight: 600;
+        font-size: clamp(1.8rem, 2.6vw, 2.4rem);
+        color: $onyx;
+    }
+
+    &__save {
+        display: inline-block;
+        font-family: $font-body;
+        font-weight: 400;
+        font-size: 0.72rem;
+        color: $onyx;
+        background: $gold;
+        padding: 4px 10px;
+        border-radius: 2px;
+        vertical-align: middle;
+    }
+
+    &__desc {
+        margin: 16px 0 26px;
+        font-family: $font-body;
+        font-weight: 300;
+        font-size: 0.92rem;
+        line-height: 1.7;
+        color: rgba($onyx, 0.68);
+    }
+
+    // Flip cards
+    &__flips {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+    }
+
+    &__flip {
+        perspective: 1000px;
+        height: 100px;
+        background: none;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+        text-align: left;
+    }
+
+    &__flip-inner {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        transform-style: preserve-3d;
+        transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    &__flip:hover .js-new-product__flip-inner,
+    &__flip--active .js-new-product__flip-inner {
+        transform: rotateY(180deg);
+    }
+
+    &__flip-face {
+        position: absolute;
+        inset: 0;
+        backface-visibility: hidden;
+        border: 1px solid rgba($onyx, 0.15);
+        border-radius: 2px;
+        padding: 14px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__flip-front {
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        color: $onyx;
+
+        svg {
+            font-size: 1.2rem;
+            color: $gold;
+        }
+
+        span {
+            font-family: $font-body;
+            font-weight: 400;
+            font-size: 0.78rem;
+            letter-spacing: 0.02em;
+        }
+    }
+
+    &__flip-back {
+        transform: rotateY(180deg);
+        justify-content: center;
+        background: $onyx;
+
+        p {
+            margin: 0;
+            font-family: $font-body;
+            font-weight: 300;
+            font-size: 0.74rem;
+            line-height: 1.5;
+            color: rgba($ivory, 0.85);
+        }
+    }
+
+    // Spec boxes with icons
+    &__specs {
+        display: grid;
+        grid-template-columns: repeat(6, 1fr);
+        gap: 16px;
+        max-width: 1200px;
+        margin: 100px auto 0;
+        padding: 0 48px 40px;
+    }
+
+    &__spec-box {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        text-align: center;
+        padding: 28px 14px;
+        border: 1px solid rgba($onyx, 0.1);
+        border-radius: 2px;
+        transition: transform 0.35s ease, border-color 0.35s ease, box-shadow 0.35s ease;
+
+        &:hover {
+            transform: translateY(-6px);
+            border-color: $gold;
+            box-shadow: 0 20px 34px -20px rgba($onyx, 0.2);
+        }
+    }
+
+    &__spec-icon {
+        width: 46px;
+        height: 46px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background: rgba($gold, 0.15);
+        color: $gold;
+        font-size: 1.15rem;
+        transition: background 0.35s ease, color 0.35s ease;
+    }
+
+    &__spec-box:hover &__spec-icon {
+        background: $gold;
+        color: $onyx;
+    }
+
+    &__spec-label {
+        font-family: $font-heading;
+        font-weight: 500;
+        font-size: 0.85rem;
+        letter-spacing: 0.02em;
+        color: $onyx;
+    }
+}
+
+// Tablet
+@media (max-width: 1024px) {
+    .js-new-product {
+        &__image-wrap {
+            height: 64vh;
+        }
+
+        &__glass {
+            max-width: 520px;
+            margin-right: auto;
+            margin-left: auto;
+            margin-top: -80px;
+        }
+
+        &__specs {
+            grid-template-columns: repeat(3, 1fr);
+            margin: 72px auto;
+            padding: 0 32px;
+        }
+    }
+}
+
+// Mobile — stacked, no overlap
+@media (max-width: 600px) {
+    .js-new-product {
+        padding-top: 64px;
+
+        &__image-wrap {
+            height: 52vh;
+        }
+
+        &__buy-pill {
+            left: 16px;
+            bottom: 16px;
+        }
+
+        &__buy-pill-price {
+            padding: 0 12px;
+            font-size: 0.85rem;
+        }
+
+        &__buy-pill-cta {
+            padding: 10px 14px;
+            font-size: 0.75rem;
+        }
+
+        &__arrows {
+            top: auto;
+            bottom: 16px;
+            right: 16px;
+        }
+
+        &__arrow {
+            width: 36px;
+            height: 36px;
+            font-size: 0.75rem;
+        }
+
+        &__glass {
+            max-width: 100%;
+            margin: 0;
+            padding: 28px 20px;
+            border-radius: 0;
+        }
+
+        &__flips {
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        &__flip {
+            height: 88px;
+        }
+
+        &__specs {
+            grid-template-columns: repeat(3, 1fr);
+            margin: 56px 0;
+            padding: 0 20px;
+            gap: 10px;
+        }
+
+        &__spec-box {
+            padding: 20px 8px;
+        }
+    }
+}
+
+@media (max-width: 380px) {
+    .js-new-product__specs {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
