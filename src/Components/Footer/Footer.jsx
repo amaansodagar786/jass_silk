@@ -7,15 +7,8 @@ import "./Footer.scss";
 
 import logo from "../../assets/images/logo/logo.png";
 
-// Dummy data — replace with real data later
-const PRODUCTS = [
-    { id: "silk-noir", name: "Silk Noir", note: "Amber · Oud" },
-    { id: "silk-bloom", name: "Silk Bloom", note: "Jasmine · Musk" },
-    { id: "silk-dawn", name: "Silk Dawn", note: "Citrus · Cedar" },
-    { id: "silk-velvet", name: "Silk Velvet", note: "Vanilla · Sandalwood" },
-    { id: "silk-mirage", name: "Silk Mirage", note: "Bergamot · Iris" },
-    { id: "silk-ember", name: "Silk Ember", note: "Spice · Leather" },
-];
+// adjust this relative path to wherever products.js actually lives
+import { PRODUCTS } from "../../Components/data/products";
 
 // Ornamental silk-thread divider — wavy ribbon path with gradient + knot marks, draws in on scroll
 function ThreadDivider() {
@@ -79,7 +72,7 @@ export default function Footer() {
                     <ul className="js-footer__products">
                         {PRODUCTS.map((p) => (
                             <li key={p.id} className="js-footer__product">
-                                <a href={`/product/${p.id}`}>
+                                <a href={`/product-v2/${p.id}`}>
                                     <span className="js-footer__product-name">{p.name}</span>
                                 </a>
                             </li>

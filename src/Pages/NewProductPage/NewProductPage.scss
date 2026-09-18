@@ -10,6 +10,21 @@ $font-body: "Kanit", sans-serif;
     background: $ivory;
     padding-top: 84px; // clears fixed nav
 
+    &--empty {
+        min-height: 60vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 16px;
+        font-family: $font-body;
+
+        a {
+            color: $gold;
+            text-decoration: underline;
+        }
+    }
+
     &__hero {
         position: relative;
     }
@@ -63,7 +78,7 @@ $font-body: "Kanit", sans-serif;
         height: 42px;
         border-radius: 50%;
         border: 1px solid rgba($ivory, 0.5);
-        background: rgba($ivory, 0.12);
+        // background: rgba($ivory, 0.12);
         backdrop-filter: blur(6px);
         color: $ivory;
         display: flex;
@@ -72,6 +87,7 @@ $font-body: "Kanit", sans-serif;
         cursor: pointer;
         font-size: 0.85rem;
         transition: background 0.3s ease, transform 0.25s ease;
+         background: $gold;
 
         &:hover {
             background: $gold;
@@ -493,7 +509,7 @@ $font-body: "Kanit", sans-serif;
         &__specs {
             grid-template-columns: repeat(3, 1fr);
             margin: 56px 0 0;
-            padding: 0 20px  30px;
+            padding: 0 20px 30px;
             gap: 10px;
         }
 

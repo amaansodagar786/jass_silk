@@ -1,42 +1,15 @@
 import { useEffect, useRef, useState } from "react";
+import { useParams } from "react-router-dom";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import "./ProductPage.scss";
 
+// adjust this relative path to wherever products.js actually lives
+import { getProductById } from "../../Components/data/products";
+
 gsap.registerPlugin(ScrollTrigger);
 
 const AUTOPLAY_MS = 4000;
-
-// swap every field below with real client data + real photography —
-// this is all placeholder content so the layout can be reviewed as-is
-const PRODUCT = {
-  name: "Jass Silk",
-  tagline: "Eau de Parfum · 50ml",
-  currency: "₹",
-  price: 3200,
-  compareAtPrice: 4200,
-  description:
-    "A quiet kind of luxury — warm amber threaded through cool jasmine, finished with a hush of sandalwood. Built for the moment right before you walk into a room.",
-  proTip:
-    "Spray on pulse points — wrists, neck, behind the ears — and let it settle for a minute before you dress.",
-  howToUse:
-    "Two to three sprays from about 15cm away is plenty. Reapply after 6-8 hours for an evening refresh.",
-  categories: ["Woody", "Evening", "Unisex", "Amber", "Long-lasting"],
-  images: [
-    "https://images.unsplash.com/photo-1589493732575-11a963a7c415?w=1600&q=80&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1720967361123-9c17ec9025dc?w=1600&q=80&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1621275155732-2bff82c64fd2?w=1600&q=80&auto=format&fit=crop",
-    "https://images.unsplash.com/photo-1694422789021-54bd74b39f52?w=1600&q=80&auto=format&fit=crop",
-  ],
-  featureCards: [
-    { icon: "clock", title: "Long Lasting", text: "8+ hours of wear on skin" },
-    { icon: "leaf", title: "Vegan Formula", text: "No animal-derived ingredients" },
-    { icon: "heart", title: "Cruelty Free", text: "Never tested on animals" },
-    { icon: "hand", title: "Hand Blended", text: "Small-batch, made in-house" },
-    { icon: "bottle", title: "Glass Bottle", text: "Recyclable, refillable design" },
-    { icon: "flask", title: "Perfumer Grade", text: "Fine fragrance-grade ethanol base" },
-  ],
-};
 
 // small hand-drawn icon set — no external icon library dependency
 function FeatureIcon({ name }) {
@@ -108,17 +81,22 @@ function ArrowIcon({ direction }) {
 }
 
 export default function ProductPage() {
+  const { id } = useParams();
+  const product = getProductById(id);
+
   const rootRef = useRef(null);
   const intervalRef = useRef(null);
   const [current, setCurrent] = useState(0);
-  const total = PRODUCT.images.length;
+  const total = product?.images?.length || 0;
 
-  const discountPct = PRODUCT.compareAtPrice
-    ? Math.round(100 - (PRODUCT.price / PRODUCT.compareAtPrice) * 100)
-    : null;
+  const discountPct =
+    product?.compareAtPrice && product.price
+      ? Math.round(100 - (product.price / product.compareAtPrice) * 100)
+      : null;
 
   // mobile gallery autoplay — infinite loop, every 4s
   useEffect(() => {
+    if (!total) return;
     intervalRef.current = setInterval(() => {
       setCurrent((c) => (c + 1) % total);
     }, AUTOPLAY_MS);
@@ -143,6 +121,7 @@ export default function ProductPage() {
   }
 
   useEffect(() => {
+    if (!product) return;
     const ctx = gsap.context(() => {
       const reveals = gsap.utils.toArray(".js-reveal");
       reveals.forEach((el) => {
@@ -161,31 +140,41 @@ export default function ProductPage() {
     }, rootRef);
 
     return () => ctx.revert();
-  }, []);
+  }, [product]);
+
+  // no matching product for this :id — simple fallback, no crash
+  if (!product) {
+    return (
+      <main className="js-product js-product--empty">
+        <p>Product not found.</p>
+        <a href="/">Back to collection</a>
+      </main>
+    );
+  }
 
   return (
     <main className="js-product" ref={rootRef}>
       {/* ---------- opening spread ---------- */}
       <section className="js-product__hero">
-        <span className="js-product__hero-kicker">{PRODUCT.tagline}</span>
+        <span className="js-product__hero-kicker">{product.tagline}</span>
 
         <div className="js-product__hero-media">
-          <img src={PRODUCT.images[0]} alt={PRODUCT.name} />
+          <img src={product.images[0]} alt={product.name} />
         </div>
 
-        <h1 className="js-product__hero-name">{PRODUCT.name}</h1>
+        <h1 className="js-product__hero-name">{product.name}</h1>
 
         <div className="js-product__hero-buy">
           <div className="js-product__price">
             <span className="js-product__price-now">
-              {PRODUCT.currency}
-              {PRODUCT.price.toLocaleString("en-IN")}
+              {product.currency}
+              {product.price.toLocaleString("en-IN")}
             </span>
-            {PRODUCT.compareAtPrice && (
+            {product.compareAtPrice && (
               <>
                 <span className="js-product__price-was">
-                  {PRODUCT.currency}
-                  {PRODUCT.compareAtPrice.toLocaleString("en-IN")}
+                  {product.currency}
+                  {product.compareAtPrice.toLocaleString("en-IN")}
                 </span>
                 <span className="js-product__price-save">Save {discountPct}%</span>
               </>
@@ -204,9 +193,9 @@ export default function ProductPage() {
             className="js-product__gallery-track"
             style={{ "--current": current }}
           >
-            {PRODUCT.images.map((src, i) => (
+            {product.images.map((src, i) => (
               <div className="js-product__gallery-frame" key={i}>
-                <img src={src} alt={`${PRODUCT.name} — view ${i + 1}`} />
+                <img src={src} alt={`${product.name} — view ${i + 1}`} />
               </div>
             ))}
           </div>
@@ -233,24 +222,24 @@ export default function ProductPage() {
       {/* ---------- description, pull-quote style ---------- */}
       <section className="js-product__description js-reveal">
         <span className="js-product__description-rule" aria-hidden="true" />
-        <p>{PRODUCT.description}</p>
+        <p>{product.description}</p>
       </section>
 
       {/* ---------- pro tip / how to use, offset spec-sheet ---------- */}
       <section className="js-product__usage">
         <div className="js-product__usage-block js-product__usage-block--tip js-reveal">
           <span className="js-product__usage-label">Pro Tip</span>
-          <p>{PRODUCT.proTip}</p>
+          <p>{product.proTip}</p>
         </div>
         <div className="js-product__usage-block js-product__usage-block--how js-reveal">
           <span className="js-product__usage-label">How to Use</span>
-          <p>{PRODUCT.howToUse}</p>
+          <p>{product.howToUse}</p>
         </div>
       </section>
 
       {/* ---------- categories, pill tags ---------- */}
       <section className="js-product__categories js-reveal" aria-label="Categories">
-        {PRODUCT.categories.map((cat) => (
+        {product.categories.map((cat) => (
           <span className="js-product__tag" key={cat}>
             {cat}
           </span>
@@ -260,7 +249,7 @@ export default function ProductPage() {
       {/* ---------- feature cards, uniform "spec sheet" grid ---------- */}
       <section className="js-product__features" aria-label="Product highlights">
         <div className="js-product__features-track">
-          {PRODUCT.featureCards.map((card, i) => (
+          {product.featureCards.map((card, i) => (
             <div className="js-product__feature-card js-reveal" key={card.title}>
               <span className="js-product__feature-index" aria-hidden="true">
                 {String(i + 1).padStart(2, "0")}
@@ -281,13 +270,13 @@ export default function ProductPage() {
       <div className="js-product__mobile-bar">
         <div className="js-product__price js-product__price--compact">
           <span className="js-product__price-now">
-            {PRODUCT.currency}
-            {PRODUCT.price.toLocaleString("en-IN")}
+            {product.currency}
+            {product.price.toLocaleString("en-IN")}
           </span>
-          {PRODUCT.compareAtPrice && (
+          {product.compareAtPrice && (
             <span className="js-product__price-was">
-              {PRODUCT.currency}
-              {PRODUCT.compareAtPrice.toLocaleString("en-IN")}
+              {product.currency}
+              {product.compareAtPrice.toLocaleString("en-IN")}
             </span>
           )}
         </div>

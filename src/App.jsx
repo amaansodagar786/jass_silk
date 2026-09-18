@@ -24,8 +24,10 @@ function App() {
         <Nav />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/product" element={<ProductPage />} />
-          <Route path="/newproduct" element={<NewProductPage />} />
+          {/* <Route path="/product" element={<ProductPage />} /> */}
+          <Route path="/product/:id" element={<ProductPage />} />
+          {/* <Route path="/newproduct" element={<NewProductPage />} /> */}
+          <Route path="/product-v2/:id" element={<NewProductPage />} />
 
         </Routes>
         <Footer />

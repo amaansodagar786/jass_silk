@@ -5,22 +5,8 @@ import { FaArrowLeftLong, FaArrowRightLong } from "react-icons/fa6";
 import "swiper/css";
 import "./ProductsShowcase.scss";
 
-import product1 from "../../../assets/images/products/product1.png";
-import product2 from "../../../assets/images/products/product2.png";
-import product3 from "../../../assets/images/products/product3.png";
-import product4 from "../../../assets/images/products/product4.png";
-import product5 from "../../../assets/images/products/product5.png";
-import product6 from "../../../assets/images/products/product6.png";
-
-// Dummy data — replace with real products + individual photos later
-const PRODUCTS = [
-    { id: "silk-noir", name: "Silk Noir", note: "Amber · Oud", img: product1 },
-    { id: "silk-bloom", name: "Silk Bloom", note: "Jasmine · Musk", img: product2 },
-    { id: "silk-dawn", name: "Silk Dawn", note: "Citrus · Cedar", img: product3 },
-    { id: "silk-velvet", name: "Silk Velvet", note: "Vanilla · Sandalwood", img: product4 },
-    { id: "silk-mirage", name: "Silk Mirage", note: "Bergamot · Iris", img: product5 },
-    { id: "silk-ember", name: "Silk Ember", note: "Spice · Leather", img: product6 },
-];
+// adjust this relative path to wherever products.js actually lives
+import { PRODUCTS } from "../../../Components/data/products";
 
 export default function ProductsShowcase() {
     const swiperRef = useRef(null);
@@ -82,28 +68,17 @@ export default function ProductsShowcase() {
                     <SwiperSlide key={p.id} className="js-products__slide">
                         <a href={`/product/${p.id}`} className="js-products__card">
                             <div className="js-products__media">
-                                <img src={p.img} alt={p.name} />
+                                <img src={p.homeImage} alt={p.name} />
                                 <span className="js-products__view">View Product</span>
                             </div>
                             <div className="js-products__info">
                                 <span className="js-products__name">{p.name}</span>
-                                <span className="js-products__note">{p.note}</span>
+                                <span className="js-products__note">{p.categories.slice(0, 2).join(" · ")}</span>
                             </div>
                         </a>
                     </SwiperSlide>
                 ))}
             </Swiper>
-
-            {/* <div className="js-products__progress">
-                <div className="js-products__progress-track">
-                    {PRODUCTS.map((p, i) => (
-                        <span
-                            key={p.id}
-                            className={`js-products__progress-dot ${i === activeIndex ? "js-products__progress-dot--active" : ""}`}
-                        />
-                    ))}
-                </div>
-            </div> */}
         </section>
     );
 }

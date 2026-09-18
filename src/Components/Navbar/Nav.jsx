@@ -3,15 +3,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import "./Nav.scss";
 import logo from "../../assets/images/logo/logo.png";
 
-// Dummy product data — replace with real data later
-const PRODUCTS = [
-    { id: "silk-noir", name: "Silk Noir", note: "Amber · Oud", buyLink: "#", img: null },
-    { id: "silk-bloom", name: "Silk Bloom", note: "Jasmine · Musk", buyLink: "#", img: null },
-    { id: "silk-dawn", name: "Silk Dawn", note: "Citrus · Cedar", buyLink: "#", img: null },
-    { id: "silk-velvet", name: "Silk Velvet", note: "Vanilla · Sandalwood", buyLink: "#", img: null },
-    { id: "silk-mirage", name: "Silk Mirage", note: "Bergamot · Iris", buyLink: "#", img: null },
-    { id: "silk-ember", name: "Silk Ember", note: "Spice · Leather", buyLink: "#", img: null },
-];
+// adjust this relative path to wherever products.js actually lives
+import { PRODUCTS } from "../../Components/data/products";
 
 export default function Nav() {
     const [scrolled, setScrolled] = useState(false);
@@ -72,10 +65,12 @@ export default function Nav() {
                                     {PRODUCTS.map((p) => (
                                         <a href={`/product/${p.id}`} className="js-nav__strip-item" key={p.id}>
                                             <span className="js-nav__strip-thumb">
-                                                {p.img ? <img src={p.img} alt={p.name} /> : <span className="js-nav__strip-thumb-fallback" />}
+                                                <img src={p.homeImage} alt={p.name} />
                                             </span>
                                             <span className="js-nav__strip-name">{p.name}</span>
-                                            <span className="js-nav__strip-note">{p.note}</span>
+                                            <span className="js-nav__strip-note">
+                                                {p.categories.slice(0, 2).join(" · ")}
+                                            </span>
                                         </a>
                                     ))}
                                 </motion.div>
@@ -123,11 +118,13 @@ export default function Nav() {
                                     onClick={() => setMobileOpen(false)}
                                 >
                                     <span className="js-nav-overlay__thumb">
-                                        {p.img ? <img src={p.img} alt={p.name} /> : <span className="js-nav-overlay__thumb-fallback" />}
+                                        <img src={p.homeImage} alt={p.name} />
                                     </span>
                                     <span className="js-nav-overlay__text">
                                         <span className="js-nav-overlay__name">{p.name}</span>
-                                        <span className="js-nav-overlay__note">{p.note}</span>
+                                        <span className="js-nav-overlay__note">
+                                            {p.categories.slice(0, 2).join(" · ")}
+                                        </span>
                                     </span>
                                 </a>
                             ))}

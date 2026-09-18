@@ -1,51 +1,44 @@
 import { useState, useRef, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import gsap from "gsap";
 import {
     FaLightbulb, FaWandMagicSparkles, FaArrowRight,
-    FaChevronLeft, FaChevronRight,
     FaTree, FaGem, FaClock, FaMoon, FaDroplet, FaSprayCanSparkles,
+    FaArrowLeft,
 } from "react-icons/fa6";
 import "./NewProductPage.scss";
 
-// Dummy data — replace with real client data later
-const PRODUCT = {
-    name: "Silk Noir",
-    price: 2499,
-    mrp: 3199,
-    categories: ["Woody", "Oriental", "Evening Wear"],
-    description:
-        "A deep, resinous fragrance built around aged oud and warm amber. Silk Noir is bold without being loud — meant for evenings that matter.",
-    proTip: "Apply on pulse points right after a shower, while skin is still slightly damp, for longer hold.",
-    howToUse: "2-3 sprays on neck and wrists. Avoid rubbing — let it settle naturally into the skin.",
-    buyLink: "#",
-    images: [
-        "https://images.unsplash.com/photo-1709662369900-130507781728?w=1400&q=80&auto=format&fit=crop",
-        "https://images.unsplash.com/photo-1709662369957-0cbf9f8452fc?w=1400&q=80&auto=format&fit=crop",
-        "https://images.unsplash.com/photo-1591892212776-a09de24dbe84?w=1400&q=80&auto=format&fit=crop",
-        "https://images.unsplash.com/photo-1585218334450-afcf929da36e?w=1400&q=80&auto=format&fit=crop",
-    ],
-    // Fallback shown if an image URL fails to load (broken link / network block)
-    fallbackImage:
-        "https://images.unsplash.com/photo-1541643600914-78b084683601?w=1400&q=80&auto=format&fit=crop",
-    specs: [
-        { label: "Oud", icon: <FaTree /> },
-        { label: "Amber", icon: <FaGem /> },
-        { label: "8-10 Hrs", icon: <FaClock /> },
-        { label: "Evening", icon: <FaMoon /> },
-        { label: "100 ml", icon: <FaDroplet /> },
-        { label: "EDP", icon: <FaSprayCanSparkles /> },
-    ],
+// adjust this relative path to wherever products.js actually lives
+import { getProductById } from "../../Components/data/products";
+
+// products.js stores featureCards as { icon: "clock", title, text } —
+// this page's design calls them "specs" and wants an actual react-icon +
+// just a short label, so map the icon keys to the icon set already used
+// here and reuse `title` as the spec label
+const SPEC_ICONS = {
+    clock: <FaClock />,
+    leaf: <FaTree />,
+    heart: <FaGem />,
+    hand: <FaMoon />,
+    bottle: <FaDroplet />,
+    flask: <FaSprayCanSparkles />,
 };
 
 const AUTOPLAY_DELAY = 6000;
+// generic placeholder shown only if every real image on the product fails
+const GENERIC_FALLBACK =
+    "https://images.unsplash.com/photo-1541643600914-78b084683601?w=1400&q=80&auto=format&fit=crop";
 
 export default function NewProductPage() {
+    const { id } = useParams();
+    const product = getProductById(id);
+
     const [flipTip, setFlipTip] = useState(false);
     const [flipHow, setFlipHow] = useState(false);
     // Track which image URLs failed to load, so we can swap to the fallback
     const [brokenImages, setBrokenImages] = useState({});
     // Which product image each of the two crossfade layers is currently showing
-    const [layerIndices, setLayerIndices] = useState([0, 1 % PRODUCT.images.length]);
+    const [layerIndices, setLayerIndices] = useState([0, 1]);
     // Which layer (0 or 1) is currently the visible/top one
     const [activeImg, setActiveImg] = useState(0); // drives the dots
 
@@ -56,22 +49,25 @@ export default function NewProductPage() {
     const touchStartX = useRef(0);
     const timerRef = useRef(null);
 
-    const discountPct = Math.round(((PRODUCT.mrp - PRODUCT.price) / PRODUCT.mrp) * 100);
-    const TOTAL = PRODUCT.images.length;
+    const images = product?.images || [];
+    const TOTAL = images.length;
+    const discountPct =
+        product?.compareAtPrice && product.price
+            ? Math.round(((product.compareAtPrice - product.price) / product.compareAtPrice) * 100)
+            : null;
 
     const getSrc = (index) =>
-        brokenImages[index] ? PRODUCT.fallbackImage : PRODUCT.images[index];
+        brokenImages[index] ? GENERIC_FALLBACK : images[index];
 
     const handleImageError = (index) => {
         setBrokenImages((prev) => (prev[index] ? prev : { ...prev, [index]: true }));
     };
 
-    // Smooth crossfade + gentle zoom transition (replaces the old diagonal wipe).
-    // Two stacked image layers: the incoming image loads into the hidden layer,
-    // then fades/scales in on top while the old one fades out underneath —
-    // no clip-path or hard cuts, so there's nothing left to glitch.
+    // Smooth crossfade + gentle zoom transition. Two stacked image layers:
+    // the incoming image loads into the hidden layer, then fades/scales in
+    // on top while the old one fades out underneath.
     const goToImage = (newIndex) => {
-        if (newIndex === activeImgRef.current || isAnimatingRef.current) return;
+        if (!TOTAL || newIndex === activeImgRef.current || isAnimatingRef.current) return;
         isAnimatingRef.current = true;
 
         const top = topLayerRef.current;
@@ -86,7 +82,6 @@ export default function NewProductPage() {
         const topEl = layerElRefs[top].current;
         const bottomEl = layerElRefs[bottom].current;
 
-        // Let the new src paint in on the hidden layer first, then crossfade.
         requestAnimationFrame(() => {
             gsap.set(bottomEl, { opacity: 0, scale: 1.06, zIndex: 2 });
             gsap.set(topEl, { zIndex: 1 });
@@ -100,23 +95,31 @@ export default function NewProductPage() {
                 },
             });
             tl.to(bottomEl, { opacity: 1, scale: 1, duration: 0.9, ease: "power2.out" }, 0)
-              .to(topEl, { opacity: 0, duration: 0.7, ease: "power1.out" }, 0)
-              .to(topEl, { scale: 1.04, duration: 0.9, ease: "power2.out" }, 0);
+                .to(topEl, { opacity: 0, duration: 0.7, ease: "power1.out" }, 0)
+                .to(topEl, { scale: 1.04, duration: 0.9, ease: "power2.out" }, 0);
         });
     };
 
     const resetAutoplay = () => {
         clearInterval(timerRef.current);
+        if (!TOTAL) return;
         timerRef.current = setInterval(() => {
             goToImage((activeImgRef.current + 1) % TOTAL);
         }, AUTOPLAY_DELAY);
     };
 
     useEffect(() => {
+        if (!product) return;
+        // reset gallery state whenever the :id changes (navigating between products)
+        activeImgRef.current = 0;
+        topLayerRef.current = 0;
+        setActiveImg(0);
+        setLayerIndices([0, 1 % TOTAL]);
+        setBrokenImages({});
         resetAutoplay();
         return () => clearInterval(timerRef.current);
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [product?.id]);
 
     const handlePrev = () => {
         goToImage((activeImgRef.current - 1 + TOTAL) % TOTAL);
@@ -139,6 +142,16 @@ export default function NewProductPage() {
         else handlePrev();
     };
 
+    // no matching product for this :id — simple fallback, no crash
+    if (!product) {
+        return (
+            <main className="js-new-product js-new-product--empty">
+                <p>Product not found.</p>
+                <a href="/">Back to collection</a>
+            </main>
+        );
+    }
+
     return (
         <main className="js-new-product">
             <section className="js-new-product__hero">
@@ -157,7 +170,7 @@ export default function NewProductPage() {
                                 zIndex: layer === topLayerRef.current ? 1 : 0,
                             }}
                             src={getSrc(layerIndices[layer])}
-                            alt={PRODUCT.name}
+                            alt={product.name}
                             loading="eager"
                             onError={() => handleImageError(layerIndices[layer])}
                         />
@@ -165,15 +178,15 @@ export default function NewProductPage() {
 
                     <div className="js-new-product__arrows">
                         <button className="js-new-product__arrow" onClick={handlePrev} aria-label="Previous image">
-                            <FaChevronLeft />
+                            <FaArrowLeft />
                         </button>
                         <button className="js-new-product__arrow" onClick={handleNext} aria-label="Next image">
-                            <FaChevronRight />
+                            <FaArrowRight />
                         </button>
                     </div>
 
                     <div className="js-new-product__dots">
-                        {PRODUCT.images.map((img, i) => (
+                        {images.map((img, i) => (
                             <button
                                 key={img}
                                 className={`js-new-product__dot ${i === activeImg ? "js-new-product__dot--active" : ""}`}
@@ -184,11 +197,11 @@ export default function NewProductPage() {
                     </div>
 
                     {/* Floating price + buy pill */}
-                    <a href={PRODUCT.buyLink} className="js-new-product__buy-pill">
+                    <a href="#" className="js-new-product__buy-pill">
                         <span className="js-new-product__buy-pill-price">
-                            ₹{PRODUCT.price.toLocaleString("en-IN")}
-                            {PRODUCT.mrp > PRODUCT.price && (
-                                <em>₹{PRODUCT.mrp.toLocaleString("en-IN")}</em>
+                            {product.currency}{product.price.toLocaleString("en-IN")}
+                            {product.compareAtPrice && (
+                                <em>{product.currency}{product.compareAtPrice.toLocaleString("en-IN")}</em>
                             )}
                         </span>
                         <span className="js-new-product__buy-pill-cta">
@@ -200,17 +213,17 @@ export default function NewProductPage() {
                 {/* Floating glass info card */}
                 <div className="js-new-product__glass">
                     <div className="js-new-product__categories">
-                        {PRODUCT.categories.map((c) => (
+                        {product.categories.map((c) => (
                             <span className="js-new-product__pill" key={c}>{c}</span>
                         ))}
                     </div>
 
-                    <h1 className="js-new-product__name">{PRODUCT.name}</h1>
-                    {PRODUCT.mrp > PRODUCT.price && (
+                    <h1 className="js-new-product__name">{product.name}</h1>
+                    {discountPct !== null && (
                         <span className="js-new-product__save">Save {discountPct}%</span>
                     )}
 
-                    <p className="js-new-product__desc">{PRODUCT.description}</p>
+                    <p className="js-new-product__desc">{product.description}</p>
 
                     {/* Desktop: interactive flip cards */}
                     <div className="js-new-product__flips js-new-product__flips--desktop">
@@ -225,7 +238,7 @@ export default function NewProductPage() {
                                     <span>Pro Tip</span>
                                 </div>
                                 <div className="js-new-product__flip-face js-new-product__flip-back">
-                                    <p>{PRODUCT.proTip}</p>
+                                    <p>{product.proTip}</p>
                                 </div>
                             </div>
                         </button>
@@ -241,7 +254,7 @@ export default function NewProductPage() {
                                     <span>How to Use</span>
                                 </div>
                                 <div className="js-new-product__flip-face js-new-product__flip-back">
-                                    <p>{PRODUCT.howToUse}</p>
+                                    <p>{product.howToUse}</p>
                                 </div>
                             </div>
                         </button>
@@ -253,14 +266,14 @@ export default function NewProductPage() {
                             <span className="js-new-product__mobile-info-icon"><FaLightbulb /></span>
                             <div>
                                 <h3>Pro Tip</h3>
-                                <p>{PRODUCT.proTip}</p>
+                                <p>{product.proTip}</p>
                             </div>
                         </div>
                         <div className="js-new-product__mobile-info-item">
                             <span className="js-new-product__mobile-info-icon"><FaWandMagicSparkles /></span>
                             <div>
                                 <h3>How to Use</h3>
-                                <p>{PRODUCT.howToUse}</p>
+                                <p>{product.howToUse}</p>
                             </div>
                         </div>
                     </div>
@@ -269,17 +282,18 @@ export default function NewProductPage() {
 
             {/* Spec boxes with icons — alternating background */}
             <section className="js-new-product__specs">
-                {PRODUCT.specs.map((spec, i) => (
+                {product.featureCards.map((card, i) => (
                     <div
-                        className={`js-new-product__spec-box ${
-                            i % 2 === 0
-                                ? "js-new-product__spec-box--a"
-                                : "js-new-product__spec-box--b"
-                        }`}
-                        key={spec.label}
+                        className={`js-new-product__spec-box ${i % 2 === 0
+                            ? "js-new-product__spec-box--a"
+                            : "js-new-product__spec-box--b"
+                            }`}
+                        key={card.title}
                     >
-                        <span className="js-new-product__spec-icon">{spec.icon}</span>
-                        <span className="js-new-product__spec-label">{spec.label}</span>
+                        <span className="js-new-product__spec-icon">
+                            {SPEC_ICONS[card.icon] || <FaGem />}
+                        </span>
+                        <span className="js-new-product__spec-label">{card.title}</span>
                     </div>
                 ))}
             </section>
