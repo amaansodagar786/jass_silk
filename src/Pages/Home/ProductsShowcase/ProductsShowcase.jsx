@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation } from "swiper/modules";
 import gsap from "gsap";
@@ -17,11 +17,16 @@ export default function ProductsShowcase() {
         setActiveIndex(swiper.realIndex);
     };
 
-    // Apple-style "focus" effect — slides scale/fade based on distance from center
+    // Apple-style "focus" effect — slides scale/fade based on distance from center.
+    // Targets the CARD inside each slide (not the slide itself) so GSAP never
+    // fights Swiper over the slide's own transform.
     const applyFocus = (swiper) => {
+        if (!swiper || swiper.destroyed) return;
         swiper.slides.forEach((slideEl) => {
+            const card = slideEl.querySelector(".js-products__card");
+            if (!card) return;
             const p = Math.min(Math.abs(slideEl.progress || 0), 1);
-            gsap.to(slideEl, {
+            gsap.to(card, {
                 scale: 1 - p * 0.16,
                 opacity: 1 - p * 0.55,
                 duration: 0.25,
@@ -29,6 +34,53 @@ export default function ProductsShowcase() {
                 overwrite: true,
             });
         });
+    };
+
+    // Re-measure Swiper once layout, fonts and images have settled.
+    // First paint can measure the container wrongly, which leaves an empty
+    // gap on the right and can leave the arrows "stuck".
+    useEffect(() => {
+        const remeasure = () => {
+            const s = swiperRef.current;
+            if (!s || s.destroyed) return;
+            s.update();
+            applyFocus(s);
+        };
+
+        const raf = requestAnimationFrame(remeasure);
+        const t = setTimeout(remeasure, 300);
+        document.fonts?.ready.then(remeasure);
+        window.addEventListener("load", remeasure);
+        window.addEventListener("resize", remeasure);
+
+        return () => {
+            cancelAnimationFrame(raf);
+            clearTimeout(t);
+            window.removeEventListener("load", remeasure);
+            window.removeEventListener("resize", remeasure);
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    const handlePrev = () => {
+        swiperRef.current?.slidePrev();
+    };
+
+    const handleNext = () => {
+        const s = swiperRef.current;
+
+        // TEMPORARY DEBUG — click the right arrow, check the browser console,
+        // then delete this console.log once the arrow works.
+        console.log({
+            exists: !!s,
+            allowSlideNext: s?.allowSlideNext,
+            isLocked: s?.isLocked,
+            animating: s?.animating,
+            slides: s?.slides?.length,
+            spv: s?.params?.slidesPerView,
+        });
+
+        s?.slideNext();
     };
 
     return (
@@ -44,16 +96,18 @@ export default function ProductsShowcase() {
 
                 <div className="js-products__nav">
                     <button
+                        type="button"
                         className="js-products__arrow"
-                        onClick={() => swiperRef.current?.slidePrev()}
+                        onClick={handlePrev}
                         aria-label="Previous product"
                         data-cursor="link"
                     >
                         <FaArrowLeftLong />
                     </button>
                     <button
+                        type="button"
                         className="js-products__arrow"
-                        onClick={() => swiperRef.current?.slideNext()}
+                        onClick={handleNext}
                         aria-label="Next product"
                         data-cursor="link"
                     >
@@ -69,6 +123,11 @@ export default function ProductsShowcase() {
                         swiperRef.current = s;
                         setActiveIndex(s.realIndex);
                         applyFocus(s);
+                        requestAnimationFrame(() => {
+                            if (s.destroyed) return;
+                            s.update();
+                            applyFocus(s);
+                        });
                     }}
                     onSlideChange={handleSlideChange}
                     onProgress={applyFocus}
@@ -76,7 +135,6 @@ export default function ProductsShowcase() {
                     observer
                     observeParents
                     loop
-                    loopAdditionalSlides={2}
                     centeredSlides
                     watchSlidesProgress
                     speed={700}
@@ -85,8 +143,8 @@ export default function ProductsShowcase() {
                     grabCursor
                     breakpoints={{
                         640: { slidesPerView: 1.8, spaceBetween: 24 },
-                        1024: { slidesPerView: 2.4, spaceBetween: 32 },
-                        1400: { slidesPerView: 2.8, spaceBetween: 36 },
+                        1024: { slidesPerView: 3, spaceBetween: 32 },
+                        1400: { slidesPerView: 3, spaceBetween: 20 },
                     }}
                     className="js-products__swiper"
                 >

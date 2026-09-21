@@ -3,83 +3,102 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import "./SignatureHighlight.scss";
 
-import img1 from "../../../assets/images/slide1.png";
-import img2 from "../../../assets/images/slide2.png";
-import img3 from "../../../assets/images/slide3.png";
-
 gsap.registerPlugin(ScrollTrigger);
 
 // how much space to leave at top for the fixed/sticky nav while pinned
-// bump this up/down to match your real nav height
-const NAV_OFFSET = 85;
+const NAV_OFFSET = 0;
 
+// swap `image` for real client ingredient photography whenever it's ready —
+// these are free-license Unsplash placeholders for now (citrus, jasmine,
+// sandalwood — matched to each note, not generic/abstract)
 const STAGES = [
-  { key: "top", label: "Top", full: "Top Notes", notes: "Citrus · Bergamot", tint: "#E8D5C4", image: img1 },
-  { key: "heart", label: "Heart", full: "Heart Notes", notes: "Jasmine · Amber", tint: "#C9A66B", image: img2 },
-  { key: "base", label: "Base", full: "Base Notes", notes: "Musk · Sandalwood", tint: "#1A1A1A", image: img3 },
+  {
+    key: "top",
+    label: "Top",
+    full: "Top Notes",
+    notes: "Citrus · Bergamot",
+    blurb: "Bright and immediate — the first breath of the fragrance.",
+    tint: "#E8D5C4",
+    image:
+      "https://images.unsplash.com/photo-1507598641400-ec3536ba81bc?w=1600&q=80&auto=format&fit=crop",
+  },
+  {
+    key: "heart",
+    label: "Heart",
+    full: "Heart Notes",
+    notes: "Jasmine · Amber",
+    blurb: "Warm and floral — the soul that lingers through the day.",
+    tint: "#C9A66B",
+    image:
+      "https://images.unsplash.com/photo-1684472993236-b605bb80ca0b?w=1600&q=80&auto=format&fit=crop",
+  },
+  {
+    key: "base",
+    label: "Base",
+    full: "Base Notes",
+    notes: "Musk · Sandalwood",
+    blurb: "Deep and grounding — what stays on skin long after.",
+    tint: "#8A6A46",
+    image:
+      "https://images.unsplash.com/photo-1702001145743-094b0b7ead51?w=1600&q=80&auto=format&fit=crop",
+  },
 ];
-
-const PARTICLE_COUNT = 26;
 
 // Pass `images={[url1, url2, url3]}` to override any of the 3 stage photos
 export default function SignatureHighlight({ images = [] }) {
   const sectionRef = useRef(null);
   const pinRef = useRef(null);
   const chamberRef = useRef(null);
-  const bgRefs = useRef([]);
+  const mediaRefs = useRef([]);
   const wordRefs = useRef([]);
   const notesRefs = useRef([]);
+  const blurbRefs = useRef([]);
+  const numberRefs = useRef([]);
   const spineRefs = useRef([]);
-  bgRefs.current = [];
+  mediaRefs.current = [];
   wordRefs.current = [];
   notesRefs.current = [];
+  blurbRefs.current = [];
+  numberRefs.current = [];
   spineRefs.current = [];
 
-  const addBgRef = (el) => el && bgRefs.current.push(el);
+  const addMediaRef = (el) => el && mediaRefs.current.push(el);
   const addWordRef = (el) => el && wordRefs.current.push(el);
   const addNotesRef = (el) => el && notesRefs.current.push(el);
+  const addBlurbRef = (el) => el && blurbRefs.current.push(el);
+  const addNumberRef = (el) => el && numberRefs.current.push(el);
   const addSpineRef = (el) => el && spineRefs.current.push(el);
-
-  // stable, randomized once — never recomputed on re-render
-  const particlesRef = useRef(null);
-  if (!particlesRef.current) {
-    particlesRef.current = Array.from({ length: PARTICLE_COUNT }, () => ({
-      left: Math.round(Math.random() * 100),
-      size: 3 + Math.round(Math.random() * 6),
-      duration: 9 + Math.random() * 8,
-      delay: -Math.random() * 14,
-    }));
-  }
 
   useEffect(() => {
     const mm = gsap.matchMedia();
 
-    // Desktop / tablet — pinned, scrubbed stage sequence.
-    //
-    // Deliberately NOT using a timeline of discrete .to() tweens here.
-    // With a pinned + scrubbed ScrollTrigger, GSAP captures a tween's
-    // "from" value lazily (at render time, not at creation time) — and
-    // ScrollTrigger's own internal pin/refresh pass can render the
-    // timeline before that capture happens the way you'd expect, which
-    // is what was leaving every stage's autoAlpha stuck at 0 no matter
-    // what initial gsap.set() we ran. Driving everything from one
-    // deterministic function based on scroll progress removes that race
-    // entirely — it's called once immediately on setup AND on every
-    // scroll update, so the first stage is guaranteed correct on load.
+    // Desktop / tablet — pinned, scrubbed stage sequence, driven by one
+    // deterministic render(progress) function (proven stable pattern —
+    // avoids the GSAP tween-capture race that a discrete timeline hits
+    // inside a pinned + scrubbed ScrollTrigger).
     mm.add("(min-width: 769px)", () => {
       const ctx = gsap.context(() => {
-        const segMax = STAGES.length - 1; // 2 for 3 stages
+        const segMax = STAGES.length - 1;
 
         function render(progress) {
-          const seg = progress * segMax; // 0..2
+          const seg = progress * segMax;
           const activeIdx = Math.round(Math.min(Math.max(seg, 0), segMax));
 
           STAGES.forEach((stage, i) => {
-            const dist = Math.abs(seg - i);
-            const alpha = Math.max(0, 1 - dist);
-            gsap.set(bgRefs.current[i], { opacity: alpha * 0.5 });
-            gsap.set(wordRefs.current[i], { opacity: alpha, scale: 0.86 + alpha * 0.14 });
-            gsap.set(notesRefs.current[i], { opacity: alpha, y: (1 - alpha) * 14 });
+            const dist = seg - i; // signed — direction drives parallax
+            const absDist = Math.abs(dist);
+            const alpha = Math.max(0, 1 - absDist);
+
+            gsap.set(mediaRefs.current[i], { autoAlpha: alpha, scale: 1.06 - alpha * 0.06 });
+
+            // layered parallax — each element moves at its own "depth":
+            // the ghost number is the slowest/furthest-back layer, the
+            // word is the fastest/nearest, notes + blurb sit in between
+            // with a slight horizontal drift for extra depth
+            gsap.set(numberRefs.current[i], { autoAlpha: alpha * 0.14, y: dist * 26 });
+            gsap.set(wordRefs.current[i], { autoAlpha: alpha, y: dist * 90, scale: 1 - absDist * 0.08 });
+            gsap.set(notesRefs.current[i], { autoAlpha: alpha, y: dist * 55, x: dist * 10 });
+            gsap.set(blurbRefs.current[i], { autoAlpha: alpha, y: dist * 70, x: dist * -14 });
           });
 
           gsap.set(chamberRef.current, { "--tint": STAGES[activeIdx].tint });
@@ -98,22 +117,22 @@ export default function SignatureHighlight({ images = [] }) {
           onUpdate: (self) => render(self.progress),
         });
 
-        // paint the correct initial state right away — don't wait for
-        // the first scroll event or ScrollTrigger's own refresh pass
         render(0);
       }, sectionRef);
 
       return () => ctx.revert();
     });
 
-    // Mobile — no pin, each stage reveals as it scrolls into view,
-    // chamber background stays sticky at the top so the mood-shift is still visible
+    // Mobile — no pin, media stays sticky behind the text stages as they
+    // reveal in normal scroll flow
     mm.add("(max-width: 768px)", () => {
       const ctx = gsap.context(() => {
-        gsap.set(bgRefs.current, { opacity: 0 });
-        gsap.set(bgRefs.current[0], { opacity: 0.5 });
-        gsap.set(wordRefs.current, { opacity: 1, scale: 1 });
-        gsap.set(notesRefs.current, { opacity: 1, y: 0 });
+        gsap.set(mediaRefs.current, { autoAlpha: 0 });
+        gsap.set(mediaRefs.current[0], { autoAlpha: 1 });
+        gsap.set(wordRefs.current, { autoAlpha: 1, y: 0, x: 0, scale: 1 });
+        gsap.set(notesRefs.current, { autoAlpha: 1, y: 0, x: 0 });
+        gsap.set(blurbRefs.current, { autoAlpha: 1, y: 0, x: 0 });
+        gsap.set(numberRefs.current, { autoAlpha: 0.14, y: 0 });
 
         STAGES.forEach((_, i) => {
           ScrollTrigger.create({
@@ -123,11 +142,29 @@ export default function SignatureHighlight({ images = [] }) {
             onEnter: () => setActive(i),
             onEnterBack: () => setActive(i),
           });
+
+          // small standalone parallax drift on the ghost number as its
+          // own block scrolls through — independent of the active-stage
+          // crossfade logic above
+          gsap.fromTo(
+            numberRefs.current[i],
+            { y: -18 },
+            {
+              y: 18,
+              ease: "none",
+              scrollTrigger: {
+                trigger: wordRefs.current[i],
+                start: "top bottom",
+                end: "bottom top",
+                scrub: 0.6,
+              },
+            }
+          );
         });
 
         function setActive(idx) {
-          bgRefs.current.forEach((bg, ii) =>
-            gsap.to(bg, { opacity: ii === idx ? 0.5 : 0, duration: 0.5 })
+          mediaRefs.current.forEach((el, ii) =>
+            gsap.to(el, { autoAlpha: ii === idx ? 1 : 0, duration: 0.5 })
           );
           gsap.to(chamberRef.current, { "--tint": STAGES[idx].tint, duration: 0.5 });
           spineRefs.current.forEach((el, ii) =>
@@ -144,56 +181,48 @@ export default function SignatureHighlight({ images = [] }) {
 
   return (
     <section className="js-signature" ref={sectionRef}>
-      <div className="js-signature__grain" aria-hidden="true" />
-
       <div className="js-signature__pin" ref={pinRef}>
         <div className="js-signature__chamber" ref={chamberRef}>
-          {/* Blurred, mood-shifting backdrop — one per stage, crossfading */}
-          {STAGES.map((stage, i) => (
-            <div className="js-signature__backdrop" key={stage.key} ref={addBgRef}>
-              <img src={images[i] || stage.image} alt="" aria-hidden="true" />
+          <div className="js-signature__grid">
+            {/* Sharp ingredient photography — one per stage, crossfading */}
+            <div className="js-signature__media">
+              {STAGES.map((stage, i) => (
+                <div className="js-signature__media-frame" key={stage.key} ref={addMediaRef}>
+                  <img src={images[i] || stage.image} alt={`${stage.full} — ${stage.notes}`} />
+                </div>
+              ))}
+              <div className="js-signature__media-tint" aria-hidden="true" />
             </div>
-          ))}
-          <div className="js-signature__wash" aria-hidden="true" />
 
-          {/* Floating scent particles */}
-          <div className="js-signature__particles" aria-hidden="true">
-            {particlesRef.current.map((p, i) => (
-              <span
-                key={i}
-                className="js-signature__particle"
-                style={{
-                  left: `${p.left}%`,
-                  width: p.size,
-                  height: p.size,
-                  animationDuration: `${p.duration}s`,
-                  animationDelay: `${p.delay}s`,
-                }}
-              />
-            ))}
-          </div>
-
-          {/* Side wayfinding spine */}
-          <div className="js-signature__spine">
-            {STAGES.map((stage, i) => (
-              <span
-                className={`js-signature__spine-item ${i === 0 ? "js-signature__spine-item--active" : ""}`}
-                key={stage.key}
-                ref={addSpineRef}
-              >
-                {stage.label}
-              </span>
-            ))}
-          </div>
-
-          {/* Huge crossfading stage typography */}
-          <div className="js-signature__words">
-            {STAGES.map((stage, i) => (
-              <div className="js-signature__word-block" key={stage.key}>
-                <span className="js-signature__word" ref={addWordRef}>{stage.full}</span>
-                <span className="js-signature__word-notes" ref={addNotesRef}>{stage.notes}</span>
+            <div className="js-signature__content">
+              {/* Side wayfinding spine */}
+              <div className="js-signature__spine">
+                {STAGES.map((stage, i) => (
+                  <span
+                    className={`js-signature__spine-item ${i === 0 ? "js-signature__spine-item--active" : ""}`}
+                    key={stage.key}
+                    ref={addSpineRef}
+                  >
+                    {stage.label}
+                  </span>
+                ))}
               </div>
-            ))}
+
+              {/* Layered parallax stage text — ghost number sits behind
+                  as the slowest-moving depth layer */}
+              <div className="js-signature__stack">
+                {STAGES.map((stage, i) => (
+                  <div className="js-signature__stage-block" key={stage.key}>
+                    <span className="js-signature__ghost-number" ref={addNumberRef} aria-hidden="true">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <span className="js-signature__word" ref={addWordRef}>{stage.full}</span>
+                    <span className="js-signature__word-notes" ref={addNotesRef}>{stage.notes}</span>
+                    <p className="js-signature__blurb" ref={addBlurbRef}>{stage.blurb}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </div>

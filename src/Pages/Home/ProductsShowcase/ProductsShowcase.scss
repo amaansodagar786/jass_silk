@@ -104,26 +104,40 @@ $font-body: "Kanit", sans-serif;
         }
     }
 
+    // Gutter lives on the WRAPPER (padding). The swiper inside is simply 100%
+    // of the wrapper's content box, so its width can never spill past the
+    // screen, and Swiper measures exactly the visible area.
     &__swiper-wrap {
         position: relative;
         z-index: 1;
+        box-sizing: border-box;
+        width: 100%;
+        padding: 0 48px;
+        overflow: hidden;
     }
 
     &__swiper {
+        box-sizing: border-box;
         width: 100%;
-        padding: 0 48px;
+        max-width: 100%;
+        margin: 0;
+        padding: 0;
     }
 
     &__slide {
         height: auto;
-        transform-origin: center center;
-        will-change: transform, opacity;
+        will-change: transform;
     }
 
+    // this is the element GSAP's focus effect animates —
+    // needs its own transform-origin + will-change since it's the one
+    // being scaled, not the swiper-slide wrapper
     &__card {
         display: block;
         text-decoration: none;
         color: $onyx;
+        transform-origin: center center;
+        will-change: transform, opacity;
     }
 
     &__media {
@@ -143,7 +157,7 @@ $font-body: "Kanit", sans-serif;
         }
     }
 
-    // Diagonal gold sweep — replaces a plain fade with a directional wipe on hover
+    // Diagonal gold sweep — directional wipe on hover
     &__sweep {
         position: absolute;
         inset: 0;
@@ -265,7 +279,7 @@ $font-body: "Kanit", sans-serif;
             margin-bottom: 44px;
         }
 
-        &__swiper {
+        &__swiper-wrap {
             padding: 0 32px;
         }
 
@@ -293,7 +307,7 @@ $font-body: "Kanit", sans-serif;
             align-self: flex-end;
         }
 
-        &__swiper {
+        &__swiper-wrap {
             padding: 0 20px;
         }
 

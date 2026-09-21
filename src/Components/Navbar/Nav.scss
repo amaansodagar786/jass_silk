@@ -6,6 +6,7 @@ $blush: #E8D5C4;
 
 $font-heading: "Sora", sans-serif;
 $font-body: "Kanit", sans-serif;
+$font-flow: "Cormorant Garamond", serif;
 
 $nav-height: 84px;
 $nav-height-mobile: 64px;
@@ -18,7 +19,11 @@ $nav-height-mobile: 64px;
     z-index: 100;
     height: $nav-height;
     background: transparent;
-    transition: background 0.4s ease, box-shadow 0.4s ease, height 0.3s ease;
+    transition:
+        background 0.4s ease,
+        box-shadow 0.4s ease,
+        height 0.3s ease,
+        transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
 
     &--solid {
         background: rgba($ivory, 0.92);
@@ -26,7 +31,38 @@ $nav-height-mobile: 64px;
         box-shadow: 0 1px 0 rgba($onyx, 0.06);
     }
 
+    // Collection panel open: bar goes solid so it reads clearly above the dark panel
+    &--open {
+        background: rgba($ivory, 0.98);
+        box-shadow: none;
+    }
+
+    // Scrolling down: slide the bar away. Scrolling up brings it back.
+    &--hidden {
+        transform: translateY(-100%);
+    }
+
+    // Mobile menu open: dark bar, light logo and burger over the dark overlay
+    &--menu {
+        background: $onyx;
+        backdrop-filter: none;
+        box-shadow: none;
+    }
+
+    &--menu &__logo img {
+        filter: brightness(0) invert(1);
+    }
+
+    &--menu &__burger span {
+        background: $ivory;
+    }
+
+    &--menu &__progress {
+        opacity: 0;
+    }
+
     &__inner {
+        position: relative;
         max-width: 1200px;
         margin: 0 auto;
         height: 100%;
@@ -64,75 +100,142 @@ $nav-height-mobile: 64px;
             transition: width 0.3s ease;
         }
 
-        &:hover::after {
+        &:hover::after,
+        &[aria-expanded="true"]::after {
             width: 100%;
         }
     }
 
-    &__strip {
+    // Gold thread along the bottom edge of the bar = page scroll progress
+    &__progress {
         position: absolute;
-        top: calc(100% + 18px);
-        left: -24px;
-        background: $ivory;
-        border: 1px solid rgba($onyx, 0.08);
-        box-shadow: 0 20px 40px rgba($onyx, 0.12);
-        display: flex;
-        gap: 0;
-        padding: 8px;
-        border-radius: 2px;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        height: 2px;
+        transform-origin: left center;
+        background: linear-gradient(90deg, $gold, $blush);
+        opacity: 0;
+        transition: opacity 0.4s ease;
+        pointer-events: none;
     }
 
-    &__strip-item {
+    &--solid &__progress {
+        opacity: 1;
+    }
+
+    // ── Collection panel (desktop) ───────────────────────────────────────
+    &__scrim {
+        position: fixed;
+        inset: 0;
+        z-index: 98;
+        background: rgba($onyx, 0.45);
+    }
+
+    &__panel {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: $onyx;
+        border-bottom: 1px solid rgba($gold, 0.5);
+    }
+
+    &__panel-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 48px 40px 56px;
+        display: grid;
+        grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+        gap: 72px;
+        align-items: center;
+    }
+
+    &__panel-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
         display: flex;
         flex-direction: column;
-        align-items: center;
-        width: 128px;
-        padding: 14px 10px;
+        gap: 6px;
+    }
+
+    &__panel-link {
+        display: flex;
+        align-items: baseline;
+        flex-wrap: wrap;
+        gap: 2px 18px;
+        padding: 2px 0;
         text-decoration: none;
-        color: $onyx;
-        border-radius: 2px;
-        transition: background 0.25s ease;
+        color: rgba($ivory, 0.38);
+        transition: color 0.35s ease;
 
-        &:hover {
-            background: rgba($gold, 0.1);
+        &:focus-visible {
+            outline: 1px solid $gold;
+            outline-offset: 6px;
         }
 
-        &:hover .js-nav__strip-thumb {
-            transform: translateY(-3px);
-        }
-    }
-
-    &__strip-thumb {
-        width: 56px;
-        height: 72px;
-        margin-bottom: 10px;
-        display: block;
-        transition: transform 0.3s ease;
-
-        img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
+        &--active {
+            color: $ivory;
         }
     }
 
-    &__strip-name {
-        font-family: $font-heading;
-        font-weight: 500;
-        font-size: 0.95rem;
+    &__panel-name {
+        display: inline-block;
+        font-family: $font-flow;
+        font-weight: 400;
+        font-size: clamp(2rem, 3vw, 2.8rem);
         line-height: 1.1;
-        text-align: center;
+        transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
     }
 
-    &__strip-note {
+    &__panel-link--active &__panel-name {
+        transform: translateX(14px);
+    }
+
+    &__panel-note {
+        display: inline-block;
         font-family: $font-body;
         font-weight: 300;
-        font-size: 0.7rem;
-        color: rgba($onyx, 0.55);
-        margin-top: 2px;
-        text-align: center;
+        font-size: 0.8rem;
+        letter-spacing: 0.02em;
+        color: $gold;
+        opacity: 0;
+        transform: translateX(-8px);
+        transition: opacity 0.35s ease, transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
     }
 
+    &__panel-link--active &__panel-note {
+        opacity: 1;
+        transform: translateX(14px);
+    }
+
+    &__panel-media {
+        position: relative;
+        aspect-ratio: 4 / 3;
+        overflow: hidden;
+        border: 1.5px solid $gold;
+        border-radius: 2px;
+        background: $onyx;
+    }
+
+    &__panel-img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0;
+        transform: scale(1.06);
+        transition: opacity 0.5s ease, transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+
+        &--on {
+            opacity: 1;
+            transform: scale(1);
+        }
+    }
+
+    // ── Bar: logo, CTA, burger ───────────────────────────────────────────
     &__logo {
         justify-self: center;
         display: inline-flex;
@@ -145,6 +248,7 @@ $nav-height-mobile: 64px;
             width: auto;
             object-fit: contain;
             filter: brightness(0) saturate(100%);
+            transition: filter 0.3s ease;
         }
     }
 
@@ -201,7 +305,7 @@ $nav-height-mobile: 64px;
             right: 0;
             height: 1px;
             background: $onyx;
-            transition: transform 0.3s ease, opacity 0.3s ease, top 0.3s ease;
+            transition: transform 0.3s ease, opacity 0.3s ease, top 0.3s ease, background 0.3s ease;
         }
 
         span:first-child {
@@ -226,11 +330,12 @@ $nav-height-mobile: 64px;
     }
 }
 
+// ── Mobile / tablet full-screen menu (dark, matches footer) ─────────────
 .js-nav-overlay {
     position: fixed;
     inset: 0;
     z-index: 99;
-    background: $ivory;
+    background: $onyx;
     padding: $nav-height-mobile + 24px 24px 32px;
     display: flex;
     flex-direction: column;
@@ -247,8 +352,6 @@ $nav-height-mobile: 64px;
         width: 100%;
     }
 
-    // product rows are now left-aligned — thumbnail then name/note
-    // stacked to the left of it, instead of centered
     &__item {
         display: flex;
         align-items: center;
@@ -256,10 +359,10 @@ $nav-height-mobile: 64px;
         gap: 16px;
         padding: 14px 4px;
         text-decoration: none;
-        color: $onyx;
-        border-bottom: 1px solid rgba($onyx, 0.08);
+        color: $ivory;
+        border-bottom: 1px solid rgba($ivory, 0.1);
         width: 100%;
-        max-width: 320px;
+        max-width: 340px;
         margin: 0 auto;
         transition: gap 0.3s ease;
 
@@ -273,11 +376,15 @@ $nav-height-mobile: 64px;
         height: 68px;
         flex-shrink: 0;
         display: block;
+        border: 1px solid rgba($gold, 0.6);
+        border-radius: 2px;
+        overflow: hidden;
 
         img {
             width: 100%;
             height: 100%;
             object-fit: cover;
+            display: block;
         }
     }
 
@@ -289,30 +396,31 @@ $nav-height-mobile: 64px;
     }
 
     &__name {
-        font-family: $font-heading;
-        font-weight: 500;
-        font-size: 1.15rem;
+        font-family: $font-flow;
+        font-weight: 400;
+        font-size: 1.7rem;
+        line-height: 1.1;
     }
 
     &__note {
         font-family: $font-body;
         font-weight: 300;
         font-size: 0.75rem;
-        color: rgba($onyx, 0.55);
+        color: $gold;
         margin-top: 2px;
     }
 
     &__cta {
         margin-top: auto;
         width: 100%;
-        max-width: 320px;
+        max-width: 340px;
         text-align: center;
         font-family: $font-body;
         font-weight: 400;
         font-size: 0.9rem;
         letter-spacing: 0.03em;
-        color: $ivory;
-        background: $onyx;
+        color: $onyx;
+        background: $gold;
         padding: 16px;
         text-decoration: none;
         border-radius: 2px;
@@ -327,6 +435,12 @@ $nav-height-mobile: 64px;
         }
 
         &__left {
+            display: none;
+        }
+
+        // the desktop collection panel and its scrim never show here
+        &__panel,
+        &__scrim {
             display: none;
         }
 
@@ -367,7 +481,7 @@ $nav-height-mobile: 64px;
         padding-top: $nav-height-mobile + 20px;
 
         &__name {
-            font-size: 1.05rem;
+            font-size: 1.5rem;
         }
     }
 }

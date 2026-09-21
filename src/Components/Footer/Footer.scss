@@ -7,70 +7,199 @@ $font-heading: "Sora", sans-serif;
 $font-body: "Kanit", sans-serif;
 $font-flow: "Cormorant Garamond", serif;
 
+// Must match PREVIEW_W / PREVIEW_H in Footer.jsx
+$preview-w: 230px;
+$preview-h: 290px;
+
 .js-footer {
+    position: relative;
     background: $onyx;
     color: rgba($ivory, 0.85);
-    padding: 50px 48px 20px;
+    padding: 88px 48px 24px;
     border-top: 2px solid $gold;
 
+    // ── Top: collection (left) + info (right) ────────────────────────────
     &__top {
+        position: relative;
         max-width: 1200px;
         margin: 0 auto;
         display: grid;
-        grid-template-columns: 1fr auto 1fr auto 1fr;
-        gap: 0 48px;
-        padding-bottom: 0px;
+        grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.8fr);
+        gap: 0 96px;
+        padding-bottom: 56px;
     }
 
+    // Vertical silk thread sits in the middle of the 96px gap between columns.
+    // 60.9% is where that gap's centre falls for the 1.3fr / 0.8fr split.
     &__thread {
+        position: absolute;
+        top: 0;
+        bottom: -14px; // reaches the centre line of the horizontal thread below
+        left: 60.9%;
         width: 24px;
-        height: 85%;
-        min-height: 220px;
-        overflow: visible;
-    }
+        transform: translateX(-50%);
+        pointer-events: none;
 
-    &__col {
-        display: flex;
-        flex-direction: column;
-    }
-
-    &__heading {
-        font-family: $font-heading;
-        font-weight: 600;
-        font-size: 0.78rem;
-        letter-spacing: 0.04em;
-        text-transform: uppercase;
-        color: rgba($ivory, 0.5);
-        margin-bottom: 22px;
-    }
-
-    // Brand column — logo image, forced white
-    &__logo {
-        display: inline-block;
-        margin-bottom: 10px;
-        text-decoration: none;
-
-        img {
+        svg {
             display: block;
-            height: 60px;
-            width: auto;
-            object-fit: contain;
-            filter: brightness(0) invert(1); // any logo → solid white
+            width: 100%;
+            height: 100%;
+            overflow: visible;
         }
     }
 
+    &__knot {
+        position: absolute;
+        left: 50%;
+        width: 9px;
+        height: 9px;
+        border-radius: 50%;
+        background: $gold;
+        box-shadow: 0 0 0 4px rgba($gold, 0.18);
+    }
+
+    &__thread-h {
+        display: block;
+        width: 100%;
+        max-width: 1200px;
+        height: 28px;
+        margin: 0 auto 40px;
+        overflow: visible;
+    }
+
+    // ── Collection: big names ─────────────────────────────────────────────
+    &__collection {
+        min-width: 0;
+    }
+
+    &__label {
+        display: block;
+        font-family: $font-body;
+        font-weight: 300;
+        font-size: 0.78rem;
+        letter-spacing: 0.05em;
+        color: rgba($ivory, 0.5);
+        margin-bottom: 28px;
+    }
+
+    &__products {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    &__product {
+        transition: opacity 0.35s ease;
+    }
+
+    &__product-link {
+        display: flex;
+        align-items: baseline;
+        flex-wrap: wrap;
+        gap: 4px 18px;
+        padding: 4px 0;
+        text-decoration: none;
+        color: rgba($ivory, 0.82);
+
+        &:focus-visible {
+            outline: 1px solid $gold;
+            outline-offset: 6px;
+        }
+    }
+
+    &__product-name {
+        display: inline-block;
+        font-family: $font-flow;
+        font-weight: 400;
+        font-size: clamp(2.2rem, 3.8vw, 3.5rem);
+        line-height: 1.08;
+        transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), color 0.35s ease;
+    }
+
+    &__product-note {
+        display: inline-block;
+        font-family: $font-body;
+        font-weight: 300;
+        font-size: 0.8rem;
+        letter-spacing: 0.02em;
+        color: $gold;
+        opacity: 0;
+        transform: translateX(-8px);
+        transition: opacity 0.35s ease, transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    &__product-link:hover &__product-name,
+    &__product-link:focus-visible &__product-name {
+        color: $ivory;
+        transform: translateX(16px);
+    }
+
+    &__product-link:hover &__product-note,
+    &__product-link:focus-visible &__product-note {
+        opacity: 1;
+        transform: translateX(16px);
+    }
+
+    // Dim the other names while one is hovered (mouse devices only)
+    @media (hover: hover) {
+        &__product--dim {
+            opacity: 0.28;
+        }
+    }
+
+    // ── Floating product image ───────────────────────────────────────────
+    &__preview {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 20; // below the custom cursor (9999)
+        width: $preview-w;
+        height: $preview-h;
+        overflow: hidden;
+        pointer-events: none;
+        background: $onyx;
+        border: 1.5px solid $gold;
+        border-radius: 2px;
+        box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+        opacity: 0;
+    }
+
+    &__preview-img {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        opacity: 0;
+        transition: opacity 0.4s ease;
+
+        &--on {
+            opacity: 1;
+        }
+    }
+
+    // ── Info column ──────────────────────────────────────────────────────
+    &__info {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 30px;
+        padding-top: 8px;
+    }
+
     &__tagline {
+        margin: 0;
         font-family: $font-flow;
         font-style: italic;
-        font-size: 1.1rem;
-        line-height: 1.55;
-        color: rgba($ivory, 0.75);
-        margin-bottom: 28px;
-        max-width: 260px;
+        font-size: 1.6rem;
+        line-height: 1.4;
+        color: rgba($ivory, 0.8);
     }
 
     &__cta {
-        align-self: flex-start;
         font-family: $font-body;
         font-weight: 400;
         font-size: 0.82rem;
@@ -99,39 +228,9 @@ $font-flow: "Cormorant Garamond", serif;
         }
     }
 
-    // Products column
-    &__products {
-        list-style: none;
-        margin: 0;
-        padding: 0;
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-    }
-
-    &__product a {
-        display: inline-block;
-        font-family: $font-body;
-        text-decoration: none;
-        color: rgba($ivory, 0.85);
-    }
-
-    &__product-name {
-        display: inline-block;
-        font-size: 1.02rem;
-        font-weight: 300;
-        transition: transform 0.3s ease, color 0.3s ease;
-    }
-
-    &__product a:hover &__product-name {
-        color: $gold;
-        transform: translateX(4px);
-    }
-
-    // Contact column
     &__contact-list {
         list-style: none;
-        margin: 0 0 26px;
+        margin: 0;
         padding: 0;
         display: flex;
         flex-direction: column;
@@ -204,10 +303,50 @@ $font-flow: "Cormorant Garamond", serif;
         }
     }
 
-    // Bottom bar — inline on desktop, stacked on mobile
+    // ── Giant wordmark ───────────────────────────────────────────────────
+    // The logo PNG is used as a mask (needs a transparent background).
+    // Base layer = dim ivory fill, glow layer = gold spotlight from Framer Motion.
+    // Your logo is roughly 2:1, so it can't be a wide banner. Width sets the
+    // height (height ≈ width ÷ 1.9). Change 720px to make it bigger or smaller.
+    &__mark-wrap {
+        width: 100%;
+        max-width: 720px;
+        margin: 0 auto;
+    }
+
+    &__mark {
+        position: relative;
+        display: block;
+        width: 100%;
+        text-decoration: none;
+    }
+
+    // Invisible copy of the logo: gives the box the logo's real aspect ratio
+    &__mark-size {
+        display: block;
+        width: 100%;
+        height: auto;
+        visibility: hidden;
+    }
+
+    &__mark-base,
+    &__mark-glow {
+        position: absolute;
+        inset: 0;
+        display: block;
+        pointer-events: none;
+        -webkit-mask: var(--logo) center / contain no-repeat;
+        mask: var(--logo) center / contain no-repeat;
+    }
+
+    &__mark-base {
+        background: linear-gradient(to bottom, rgba($ivory, 0.16), rgba($ivory, 0.03));
+    }
+
+    // ── Bottom bar ───────────────────────────────────────────────────────
     &__bottom {
         max-width: 1200px;
-        margin: 0 auto;
+        margin: 32px auto 0;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -221,7 +360,6 @@ $font-flow: "Cormorant Garamond", serif;
         text-align: center;
     }
 
-    // Both the copyright and the credit link share the same underline-hover style
     &__copy a,
     &__credit a {
         color: rgba($ivory, 0.65);
@@ -250,56 +388,43 @@ $font-flow: "Cormorant Garamond", serif;
     }
 }
 
-// Tablet
+// Tablet — single column, vertical thread hidden (horizontal one stays)
 @media (max-width: 1024px) {
     .js-footer {
         padding: 72px 32px 28px;
 
         &__top {
-            grid-template-columns: 1fr 1fr;
-            gap: 48px 40px;
-            row-gap: 48px;
+            grid-template-columns: 1fr;
+            gap: 64px;
+            padding-bottom: 48px;
         }
 
         &__thread {
             display: none;
         }
 
-        &__col--contact {
-            grid-column: span 2;
+        &__thread-h {
+            margin-bottom: 32px;
         }
     }
 }
 
-// Mobile — everything centered, bottom bar stacks into 2 lines
+// Mobile — everything centered, bottom bar stacks
 @media (max-width: 600px) {
     .js-footer {
         padding: 56px 20px 24px;
         text-align: center;
 
-        &__top {
-            grid-template-columns: 1fr;
-            gap: 44px;
+        &__product-link {
+            justify-content: center;
         }
 
-        &__col {
+        &__info {
             align-items: center;
         }
 
-        &__col--contact {
-            grid-column: auto;
-        }
-
-        &__logo img {
-            height: 38px;
-        }
-
         &__tagline {
-            max-width: 100%;
-        }
-
-        &__cta {
-            align-self: center;
+            font-size: 1.35rem;
         }
 
         &__contact-list li {
@@ -310,10 +435,23 @@ $font-flow: "Cormorant Garamond", serif;
             margin-top: 2px;
         }
 
-        // stack copyright + credit onto two centered lines
         &__bottom {
             flex-direction: column;
             gap: 6px;
+        }
+    }
+}
+
+// Touch devices: no hover, so show the notes and never show the floating image
+@media (hover: none) {
+    .js-footer {
+        &__preview {
+            display: none;
+        }
+
+        &__product-note {
+            opacity: 1;
+            transform: none;
         }
     }
 }
