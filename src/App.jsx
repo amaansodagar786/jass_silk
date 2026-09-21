@@ -10,6 +10,7 @@ import Footer from "./Components/Footer/Footer";
 import BackToTop from "./Components/BackToTop/BackToTop";
 import ProductPage from "./Pages/Products/ProductPage";
 import NewProductPage from "./Pages/NewProductPage/NewProductPage";
+import CustomCursor from "./Components/CustomCursor/CustomCursor";
 
 
 
@@ -20,6 +21,7 @@ function App() {
   return (
     <Router>
       <ScrollToTop />
+      <CustomCursor />
       <div>
         <Nav />
         <Routes>

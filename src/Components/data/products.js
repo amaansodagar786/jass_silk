@@ -39,8 +39,8 @@ const DEFAULT_FEATURE_CARDS = [
 
 export const PRODUCTS = [
     {
-        id: "silk-noir",
-        name: "Silk Noir",
+        id: "silk-classic",
+        name: "Silk Classic",
         tagline: "Eau de Parfum · 50ml",
         currency: "₹",
         price: 3400,
@@ -57,8 +57,8 @@ export const PRODUCTS = [
         featureCards: DEFAULT_FEATURE_CARDS,
     },
     {
-        id: "silk-bloom",
-        name: "Silk Bloom",
+        id: "silk-patola",
+        name: "Silk Patola",
         tagline: "Eau de Parfum · 50ml",
         currency: "₹",
         price: 3200,
@@ -75,8 +75,8 @@ export const PRODUCTS = [
         featureCards: DEFAULT_FEATURE_CARDS,
     },
     {
-        id: "silk-dawn",
-        name: "Silk Dawn",
+        id: "silk-kanjeevaram",
+        name: "Silk Kanjeevaram",
         tagline: "Eau de Parfum · 50ml",
         currency: "₹",
         price: 2900,
@@ -91,8 +91,8 @@ export const PRODUCTS = [
         featureCards: DEFAULT_FEATURE_CARDS,
     },
     {
-        id: "silk-velvet",
-        name: "Silk Velvet",
+        id: "silk-paithani",
+        name: "Silk Paithani",
         tagline: "Eau de Parfum · 50ml",
         currency: "₹",
         price: 3600,
@@ -107,8 +107,8 @@ export const PRODUCTS = [
         featureCards: DEFAULT_FEATURE_CARDS,
     },
     {
-        id: "silk-mirage",
-        name: "Silk Mirage",
+        id: "silk-pochampally",
+        name: "Silk Pochampally",
         tagline: "Eau de Parfum · 50ml",
         currency: "₹",
         price: 3100,
@@ -123,8 +123,8 @@ export const PRODUCTS = [
         featureCards: DEFAULT_FEATURE_CARDS,
     },
     {
-        id: "silk-ember",
-        name: "Silk Ember",
+        id: "silk-banarasi",
+        name: "Silk Banarasi",
         tagline: "Eau de Parfum · 50ml",
         currency: "₹",
         price: 3500,

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import "./HeroTypography.scss";
 
@@ -50,12 +50,21 @@ const CLIP_OPEN = "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)";
 const CLIP_HIDDEN = "polygon(-40% 0%, -10% 0%, -40% 100%, -70% 100%)";
 
 export default function HeroTypography() {
+    const sectionRef = useRef(null);
     const lettersRef = useRef([]);
     lettersRef.current = [];
     const slideRefs = useRef([]);
     slideRefs.current = [];
     const indexRef = useRef(0);
     const timeoutRef = useRef(null);
+
+    // Living-diorama depth layers
+    const bgRef = useRef(null);
+    const slidesWrapRef = useRef(null);
+    const contentInnerRef = useRef(null);
+    const sheenRef = useRef(null);
+    const moversRef = useRef(null);
+    const [canHover, setCanHover] = useState(false);
 
     const addLetterRef = (el) => {
         if (el) lettersRef.current.push(el);
@@ -154,15 +163,80 @@ export default function HeroTypography() {
         return () => clearTimeout(timeoutRef.current);
     }, []);
 
-    return (
-        <section className="js-hero-typo">
-            <div className="js-hero-typo__bg" aria-hidden="true" />
+    // --- Living Diorama: mouse-parallax depth layers + specular light sheen ---
+    // Fine-pointer devices only — never engages on touch, so mobile stays
+    // exactly as the static/autoplay experience with zero risk of jank.
+    useEffect(() => {
+        setCanHover(window.matchMedia("(hover: hover) and (pointer: fine)").matches);
+    }, []);
 
-            <div className="js-hero-typo__slides">
+    useEffect(() => {
+        if (!canHover) return;
+
+        moversRef.current = {
+            bg: {
+                x: gsap.quickTo(bgRef.current, "x", { duration: 0.9, ease: "power3" }),
+                y: gsap.quickTo(bgRef.current, "y", { duration: 0.9, ease: "power3" }),
+            },
+            slides: {
+                x: gsap.quickTo(slidesWrapRef.current, "x", { duration: 0.7, ease: "power3" }),
+                y: gsap.quickTo(slidesWrapRef.current, "y", { duration: 0.7, ease: "power3" }),
+            },
+            content: contentInnerRef.current
+                ? {
+                    x: gsap.quickTo(contentInnerRef.current, "x", { duration: 0.5, ease: "power3" }),
+                    y: gsap.quickTo(contentInnerRef.current, "y", { duration: 0.5, ease: "power3" }),
+                }
+                : null,
+            sheenX: gsap.quickTo(sheenRef.current, "x", { duration: 0.35, ease: "power3" }),
+            sheenY: gsap.quickTo(sheenRef.current, "y", { duration: 0.35, ease: "power3" }),
+        };
+
+        const handleMove = (e) => {
+            const rect = sectionRef.current.getBoundingClientRect();
+            const relX = (e.clientX - rect.left) / rect.width - 0.5; // -0.5..0.5
+            const relY = (e.clientY - rect.top) / rect.height - 0.5;
+
+            const m = moversRef.current;
+            m.bg.x(relX * -14);
+            m.bg.y(relY * -10);
+            m.slides.x(relX * -24);
+            m.slides.y(relY * -16);
+            m.content?.x(relX * 30);
+            m.content?.y(relY * 20);
+
+            m.sheenX(e.clientX - rect.left);
+            m.sheenY(e.clientY - rect.top);
+            gsap.to(sheenRef.current, { opacity: 1, duration: 0.3 });
+        };
+
+        const handleLeave = () => {
+            const m = moversRef.current;
+            m.bg.x(0); m.bg.y(0);
+            m.slides.x(0); m.slides.y(0);
+            m.content?.x(0); m.content?.y(0);
+            gsap.to(sheenRef.current, { opacity: 0, duration: 0.4 });
+        };
+
+        const section = sectionRef.current;
+        section.addEventListener("mousemove", handleMove);
+        section.addEventListener("mouseleave", handleLeave);
+
+        return () => {
+            section.removeEventListener("mousemove", handleMove);
+            section.removeEventListener("mouseleave", handleLeave);
+        };
+    }, [canHover]);
+
+    return (
+        <section className="js-hero-typo" ref={sectionRef}>
+            <div className="js-hero-typo__bg" aria-hidden="true" ref={bgRef} />
+
+            <div className="js-hero-typo__slides" ref={slidesWrapRef}>
                 {SLIDES.map((slide) => (
                     <div className="js-hero-typo__slide" key={slide.key} ref={addSlideRef}>
                         {slide.type === "content" ? (
-                            <div className="js-hero-typo__inner">
+                            <div className="js-hero-typo__inner" ref={contentInnerRef}>
                                 <h1 className="js-hero-typo__headline" aria-label={HEADLINE}>
                                     {HEADLINE.split("").map((char, i) => (
                                         <span className="js-hero-typo__letter-wrap" key={i}>
@@ -190,6 +264,8 @@ export default function HeroTypography() {
                     </div>
                 ))}
             </div>
+
+            {canHover && <div className="js-hero-typo__sheen" ref={sheenRef} aria-hidden="true" />}
         </section>
     );
 }

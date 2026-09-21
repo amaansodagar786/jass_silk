@@ -7,11 +7,42 @@ $font-heading: "Sora", sans-serif;
 $font-body: "Kanit", sans-serif;
 
 .js-brand-intro {
+    position: relative;
     background: $ivory;
     padding: 70px 48px;
     border-top: 2px solid $gold;
+    overflow: hidden;
+
+    &__grain {
+        position: absolute;
+        inset: 0;
+        z-index: 3;
+        pointer-events: none;
+        opacity: 0.045;
+        mix-blend-mode: multiply;
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+        background-size: 160px 160px;
+    }
+
+    &__ghost {
+        position: absolute;
+        left: -0.05em;
+        bottom: -0.22em;
+        z-index: 0;
+        font-family: $font-heading;
+        font-weight: 700;
+        font-size: clamp(6rem, 16vw, 13rem);
+        line-height: 1;
+        color: rgba($onyx, 0.04);
+        text-transform: uppercase;
+        letter-spacing: 0.01em;
+        pointer-events: none;
+        white-space: nowrap;
+    }
 
     &__inner {
+        position: relative;
+        z-index: 1;
         max-width: 1200px;
         margin: 0 auto;
         display: grid;
@@ -22,7 +53,7 @@ $font-body: "Kanit", sans-serif;
 
     // Text column
     &__statement {
-        margin: 0 0 56px;
+        margin: 0 0 48px;
         font-family: $font-heading;
         font-weight: 500;
         font-size: clamp(1.6rem, 2.6vw, 2.4rem);
@@ -40,39 +71,44 @@ $font-body: "Kanit", sans-serif;
         will-change: transform;
     }
 
-    &__stat-block {
+    // Wax-seal style badge — replaces the old divider + stat row
+    &__seal {
+        position: relative;
+        width: 116px;
+        height: 116px;
         display: flex;
+        flex-direction: column;
         align-items: center;
-        gap: 24px;
+        justify-content: center;
+        border: 1px solid rgba($gold, 0.6);
+        border-radius: 50%;
+        background: rgba($gold, 0.06);
     }
 
-    &__divider {
-        width: 1px;
-        height: 54px;
-        background: $gold;
-        flex-shrink: 0;
+    &__seal-ring {
+        position: absolute;
+        inset: -8px;
+        border: 1px dashed rgba($gold, 0.45);
+        border-radius: 50%;
+        animation: js-brand-seal-spin 26s linear infinite;
     }
 
-    &__stat {
-        display: flex;
-        align-items: baseline;
-        gap: 16px;
-    }
-
-    &__stat-number {
+    &__seal-number {
         font-family: $font-heading;
         font-weight: 700;
-        font-size: 3.2rem;
+        font-size: 2rem;
         color: $onyx;
         line-height: 1;
     }
 
-    &__stat-label {
+    &__seal-label {
+        margin-top: 4px;
         font-family: $font-body;
         font-weight: 300;
-        font-size: 0.85rem;
-        letter-spacing: 0.01em;
-        line-height: 1.5;
+        font-size: 0.6rem;
+        letter-spacing: 0.03em;
+        line-height: 1.4;
+        text-align: center;
         color: rgba($onyx, 0.6);
     }
 
@@ -105,26 +141,54 @@ $font-body: "Kanit", sans-serif;
         background: linear-gradient(160deg, $blush 0%, $gold 55%, $onyx 140%);
     }
 
-    &__corner {
+    &__tag {
         position: absolute;
-        width: 26px;
-        height: 26px;
+        left: 16px;
+        right: 16px;
+        bottom: 16px;
+        padding: 10px 14px;
+        text-align: center;
+        font-family: $font-body;
+        font-weight: 300;
+        font-size: 0.72rem;
+        letter-spacing: 0.02em;
+        color: $ivory;
+        background: rgba($onyx, 0.55);
+        backdrop-filter: blur(6px);
+        border-radius: 2px;
+        opacity: 0;
+        transform: translateY(8px);
+        transition: opacity 0.35s ease, transform 0.35s ease;
+    }
+
+    &__media:hover &__tag {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    // Animated gold frame that draws around the image on scroll-in
+    &__frame {
+        position: absolute;
+        inset: -10px;
+        width: calc(100% + 20px);
+        height: calc(100% + 20px);
         pointer-events: none;
-        display: none;
 
-        &--tl {
-            top: -10px;
-            left: -10px;
-            border-top: 1.5px solid $gold;
-            border-left: 1.5px solid $gold;
+        rect {
+            fill: none;
+            stroke: $gold;
+            stroke-width: 1.5;
         }
+    }
+}
 
-        &--br {
-            bottom: 30px;
-            right: -10px;
-            border-bottom: 1.5px solid $gold;
-            border-right: 1.5px solid $gold;
-        }
+@keyframes js-brand-seal-spin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
     }
 }
 
@@ -143,6 +207,10 @@ $font-body: "Kanit", sans-serif;
             margin: 0 auto;
             order: -1;
         }
+
+        &__ghost {
+            font-size: clamp(4.5rem, 20vw, 8rem);
+        }
     }
 }
 
@@ -157,27 +225,19 @@ $font-body: "Kanit", sans-serif;
         }
 
         &__statement {
-            margin: 0 auto 40px;
+            margin: 0 auto 36px;
         }
 
-        &__stat-block {
-            flex-direction: column;
-            gap: 14px;
-        }
-
-        &__divider {
-            width: 40px;
-            height: 1px;
-        }
-
-        &__stat {
-            flex-direction: column;
-            gap: 6px;
-            align-items: center;
+        &__seal {
+            margin: 0 auto;
         }
 
         &__media {
             max-width: 300px;
+        }
+
+        &__ghost {
+            font-size: clamp(3.5rem, 24vw, 6rem);
         }
     }
 }
@@ -190,5 +250,9 @@ $font-body: "Kanit", sans-serif;
     .js-brand-intro__media-inner {
         transform: none !important;
         clip-path: none !important;
+    }
+
+    .js-brand-intro__seal-ring {
+        animation: none;
     }
 }

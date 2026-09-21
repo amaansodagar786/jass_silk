@@ -7,7 +7,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 const LINES = [
     "Every Jass Silk fragrance begins",
-    "with a single thread -",
+    "with a single thread —",
     "one note strong enough to define the rest.",
 ];
 
@@ -17,6 +17,7 @@ export default function BrandIntro({ image = null }) {
     const countRef = useRef(null);
     const mediaWrapRef = useRef(null);
     const mediaInnerRef = useRef(null);
+    const frameRectRef = useRef(null);
     const rafId = useRef(null);
 
     useEffect(() => {
@@ -30,27 +31,21 @@ export default function BrandIntro({ image = null }) {
                     duration: 0.9,
                     ease: "power4.out",
                     stagger: 0.15,
-                    scrollTrigger: {
-                        trigger: sectionRef.current,
-                        start: "top 70%",
-                    },
+                    scrollTrigger: { trigger: sectionRef.current, start: "top 70%" },
                 }
             );
 
-            // Stat pullout fade/rise
+            // Seal badge fade/rise + slow ring spin starts once visible
             gsap.fromTo(
-                ".js-brand-intro__stat, .js-brand-intro__divider",
-                { y: 20, opacity: 0 },
+                ".js-brand-intro__seal",
+                { y: 20, opacity: 0, scale: 0.9 },
                 {
                     y: 0,
                     opacity: 1,
+                    scale: 1,
                     duration: 0.8,
-                    ease: "power2.out",
-                    stagger: 0.1,
-                    scrollTrigger: {
-                        trigger: ".js-brand-intro__stat-block",
-                        start: "top 85%",
-                    },
+                    ease: "back.out(1.6)",
+                    scrollTrigger: { trigger: ".js-brand-intro__seal", start: "top 85%" },
                 }
             );
 
@@ -60,15 +55,9 @@ export default function BrandIntro({ image = null }) {
                 val: 6,
                 duration: 1.4,
                 ease: "power1.out",
-                scrollTrigger: {
-                    trigger: ".js-brand-intro__stat-block",
-                    start: "top 85%",
-                    once: true,
-                },
+                scrollTrigger: { trigger: ".js-brand-intro__seal", start: "top 85%", once: true },
                 onUpdate: () => {
-                    if (countRef.current) {
-                        countRef.current.textContent = Math.floor(counter.val);
-                    }
+                    if (countRef.current) countRef.current.textContent = Math.floor(counter.val);
                 },
             });
 
@@ -80,10 +69,7 @@ export default function BrandIntro({ image = null }) {
                     clipPath: "inset(0% 0% 0% 0%)",
                     duration: 1.1,
                     ease: "power4.inOut",
-                    scrollTrigger: {
-                        trigger: sectionRef.current,
-                        start: "top 65%",
-                    },
+                    scrollTrigger: { trigger: sectionRef.current, start: "top 65%" },
                 }
             );
 
@@ -97,6 +83,19 @@ export default function BrandIntro({ image = null }) {
                     scrub: true,
                 },
             });
+
+            // Animated gold frame — draws around the image as it reveals
+            const rectEl = frameRectRef.current;
+            if (rectEl) {
+                const length = rectEl.getTotalLength();
+                gsap.set(rectEl, { strokeDasharray: length, strokeDashoffset: length });
+                gsap.to(rectEl, {
+                    strokeDashoffset: 0,
+                    duration: 1.3,
+                    ease: "power3.inOut",
+                    scrollTrigger: { trigger: sectionRef.current, start: "top 65%" },
+                });
+            }
         }, sectionRef);
 
         return () => ctx.revert();
@@ -135,6 +134,9 @@ export default function BrandIntro({ image = null }) {
 
     return (
         <section className="js-brand-intro" ref={sectionRef}>
+            <div className="js-brand-intro__grain" aria-hidden="true" />
+            <span className="js-brand-intro__ghost" aria-hidden="true">Silk</span>
+
             <div className="js-brand-intro__inner">
                 {/* Text column */}
                 <div className="js-brand-intro__text">
@@ -146,16 +148,13 @@ export default function BrandIntro({ image = null }) {
                         ))}
                     </p>
 
-                    <div className="js-brand-intro__stat-block">
-                        <span className="js-brand-intro__divider" aria-hidden="true" />
-                        <div className="js-brand-intro__stat">
-                            <span className="js-brand-intro__stat-number">
-                                <span ref={countRef}>0</span>
-                            </span>
-                            <span className="js-brand-intro__stat-label">
-                                Fragrances.<br />One Philosophy.
-                            </span>
-                        </div>
+                    {/* Wax-seal style badge instead of a plain stat row */}
+                    <div className="js-brand-intro__seal">
+                        <span className="js-brand-intro__seal-ring" aria-hidden="true" />
+                        <span className="js-brand-intro__seal-number">
+                            <span ref={countRef}>0</span>
+                        </span>
+                        <span className="js-brand-intro__seal-label">Fragrances<br />One Philosophy</span>
                     </div>
                 </div>
 
@@ -165,6 +164,7 @@ export default function BrandIntro({ image = null }) {
                     ref={mediaWrapRef}
                     onMouseMove={handleMouseMove}
                     onMouseLeave={handleMouseLeave}
+                    data-cursor="view"
                 >
                     <div className="js-brand-intro__media-inner" ref={mediaInnerRef}>
                         {image ? (
@@ -172,9 +172,12 @@ export default function BrandIntro({ image = null }) {
                         ) : (
                             <div className="js-brand-intro__media-fallback" />
                         )}
+                        <span className="js-brand-intro__tag">Crafted in Small Batches</span>
                     </div>
-                    <span className="js-brand-intro__corner js-brand-intro__corner--tl" aria-hidden="true" />
-                    <span className="js-brand-intro__corner js-brand-intro__corner--br" aria-hidden="true" />
+
+                    <svg className="js-brand-intro__frame" aria-hidden="true">
+                        <rect x="1" y="1" width="99%" height="99%" ref={frameRectRef} />
+                    </svg>
                 </div>
             </div>
         </section>

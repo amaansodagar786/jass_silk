@@ -17,6 +17,17 @@ $font-body: "Kanit", sans-serif;
     cursor: default;
     border-top: 2px solid $gold;
 
+    &__grain {
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        pointer-events: none;
+        opacity: 0.045;
+        mix-blend-mode: multiply;
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+        background-size: 160px 160px;
+    }
+
     &__mist {
         position: absolute;
         top: 0;
@@ -63,12 +74,18 @@ $font-body: "Kanit", sans-serif;
         margin-bottom: 14px;
     }
 
+    // Magnetic headline — each word is pulled toward the cursor independently
     &__text {
         margin: 0 0 20px;
         font-family: $font-heading;
         font-weight: 600;
         font-size: clamp(2.2rem, 6vw, 4.2rem);
         color: $onyx;
+    }
+
+    &__word {
+        display: inline-block;
+        will-change: transform;
     }
 
     &__subtitle {
@@ -81,8 +98,10 @@ $font-body: "Kanit", sans-serif;
         color: rgba($onyx, 0.65);
     }
 
+    // Magnetic button with text-swap mask + click ripple
     &__cta {
-        display: inline-block;
+        display: inline-flex;
+        position: relative;
         font-family: $font-body;
         font-weight: 400;
         font-size: 0.85rem;
@@ -91,24 +110,52 @@ $font-body: "Kanit", sans-serif;
         background: $onyx;
         padding: 15px 40px;
         text-decoration: none;
-        border-radius: 2px;
-        position: relative;
+        border-radius: 40px;
         overflow: hidden;
-        z-index: 0;
+        will-change: transform;
+        transition: border-radius 0.3s ease;
+    }
 
-        &::before {
-            content: "";
+    &__cta-mask {
+        position: relative;
+        display: block;
+        height: 1.1em;
+        overflow: hidden;
+    }
+
+    &__cta-label {
+        display: block;
+        transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+
+        &--back {
             position: absolute;
             inset: 0;
-            background: $gold;
-            transform: translateX(-101%);
-            transition: transform 0.35s ease;
-            z-index: -1;
+            transform: translateY(100%);
+            color: $onyx;
         }
+    }
 
-        &:hover::before {
-            transform: translateX(0);
-        }
+    &__cta:hover &__cta-label--front {
+        transform: translateY(-100%);
+    }
+
+    &__cta:hover &__cta-label--back {
+        transform: translateY(0);
+    }
+
+    &__cta:hover {
+        background: $gold;
+    }
+
+    &__ripple {
+        position: absolute;
+        width: 16px;
+        height: 16px;
+        margin: -8px 0 0 -8px;
+        border-radius: 50%;
+        background: rgba($ivory, 0.5);
+        opacity: 0;
+        pointer-events: none;
     }
 }
 
@@ -154,5 +201,10 @@ $font-body: "Kanit", sans-serif;
 @media (prefers-reduced-motion: reduce) {
     .js-exp-cursor__glow {
         animation: none;
+    }
+
+    .js-exp-cursor__word,
+    .js-exp-cursor__cta {
+        transform: none !important;
     }
 }

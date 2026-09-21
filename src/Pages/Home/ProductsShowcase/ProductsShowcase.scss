@@ -7,13 +7,44 @@ $font-heading: "Sora", sans-serif;
 $font-body: "Kanit", sans-serif;
 
 .js-products {
+    position: relative;
     background: $ivory;
     min-height: 80vh;
     padding: 60px 0;
     overflow: hidden;
     border-top: 2px solid $gold;
 
+    &__grain {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        pointer-events: none;
+        opacity: 0.045;
+        mix-blend-mode: multiply;
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+        background-size: 160px 160px;
+    }
+
+    &__ghost {
+        position: absolute;
+        top: -0.12em;
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 0;
+        font-family: $font-heading;
+        font-weight: 700;
+        font-size: clamp(5rem, 13vw, 10rem);
+        line-height: 1;
+        color: rgba($onyx, 0.04);
+        text-transform: uppercase;
+        letter-spacing: 0.02em;
+        pointer-events: none;
+        white-space: nowrap;
+    }
+
     &__head {
+        position: relative;
+        z-index: 1;
         max-width: 1200px;
         margin: 0 auto 56px;
         padding: 0 48px;
@@ -73,6 +104,11 @@ $font-body: "Kanit", sans-serif;
         }
     }
 
+    &__swiper-wrap {
+        position: relative;
+        z-index: 1;
+    }
+
     &__swiper {
         width: 100%;
         padding: 0 48px;
@@ -80,6 +116,8 @@ $font-body: "Kanit", sans-serif;
 
     &__slide {
         height: auto;
+        transform-origin: center center;
+        will-change: transform, opacity;
     }
 
     &__card {
@@ -102,8 +140,21 @@ $font-body: "Kanit", sans-serif;
             object-fit: cover;
             display: block;
             transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
-            
         }
+    }
+
+    // Diagonal gold sweep — replaces a plain fade with a directional wipe on hover
+    &__sweep {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(115deg, transparent 40%, rgba($gold, 0.35) 50%, transparent 60%);
+        transform: translateX(-140%);
+        transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+        pointer-events: none;
+    }
+
+    &__card:hover &__sweep {
+        transform: translateX(140%);
     }
 
     &__view {
@@ -121,7 +172,7 @@ $font-body: "Kanit", sans-serif;
         opacity: 0;
         transform: translateY(10px);
         transition: opacity 0.35s ease, transform 0.35s ease, background 0.3s ease, color 0.3s ease;
-        background: white ; 
+        background: $ivory;
     }
 
     &__card:hover &__media img {
@@ -161,26 +212,44 @@ $font-body: "Kanit", sans-serif;
     }
 
     &__progress {
+        position: relative;
+        z-index: 1;
         max-width: 1200px;
         margin: 40px auto 0;
         padding: 0 48px;
     }
 
     &__progress-track {
+        position: relative;
         display: flex;
         justify-content: center;
+        align-items: center;
         gap: 10px;
     }
 
+    &__progress-line {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 140px;
+        height: 1px;
+        background: rgba($onyx, 0.15);
+        transform: translate(-50%, -50%);
+    }
+
     &__progress-dot {
+        position: relative;
+        z-index: 1;
         width: 7px;
         height: 7px;
         border-radius: 50%;
-        background: rgba($onyx, 0.2);
-        transition: background 0.35s ease, transform 0.35s ease;
+        background: $ivory;
+        border: 1px solid rgba($onyx, 0.3);
+        transition: background 0.35s ease, border-color 0.35s ease, transform 0.35s ease;
 
         &--active {
             background: $gold;
+            border-color: $gold;
             transform: scale(1.4);
         }
     }
@@ -238,6 +307,14 @@ $font-body: "Kanit", sans-serif;
         &__progress {
             padding: 0 20px;
         }
+
+        &__progress-line {
+            width: 100px;
+        }
+
+        &__ghost {
+            font-size: clamp(3.2rem, 22vw, 5.5rem);
+        }
     }
 }
 
@@ -245,5 +322,9 @@ $font-body: "Kanit", sans-serif;
     .js-products__view {
         opacity: 1;
         transform: none;
+    }
+
+    .js-products__sweep {
+        display: none;
     }
 }

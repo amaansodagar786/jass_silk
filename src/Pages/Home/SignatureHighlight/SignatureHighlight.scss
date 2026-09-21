@@ -11,201 +11,219 @@ $font-body: "Kanit", sans-serif;
     background: $onyx;
     border-top: 2px solid $gold;
 
-    &__pin {
-        // desktop default — was 100vh
-        height: 88vh;
-        display: grid;
-        grid-template-columns: 1.1fr 1fr;
-        align-items: center;
-        overflow: hidden;
-    }
-
-    &__media {
-        position: relative;
-        height: 100%;
-        overflow: hidden;
-    }
-
-    // one stacked frame per stage — crossfaded by JS.
-    // first-child is visible by default (before JS attaches / as a hard fallback)
-    &__media-frame {
+    &__grain {
         position: absolute;
         inset: 0;
-        opacity: 0;
-        visibility: hidden;
+        z-index: 6;
+        pointer-events: none;
+        opacity: 0.05;
+        mix-blend-mode: overlay;
+        background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+        background-size: 160px 160px;
+    }
 
-        &:first-child {
-            opacity: 1;
-            visibility: visible;
-        }
+    &__pin {
+        height: 100vh;
+    }
+
+    &__chamber {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: $onyx;
+    }
+
+    // Blurred, mood-shifting backdrop photos — one per stage, crossfaded via JS
+    &__backdrop {
+        position: absolute;
+        inset: -5%;
+        opacity: 0;
 
         img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             display: block;
+            filter: blur(50px) saturate(1.2) brightness(0.55);
+            transform: scale(1.15);
         }
     }
 
-    &__media-tint {
+    &__wash {
         position: absolute;
         inset: 0;
-        background: var(--tint, #{$blush});
-        mix-blend-mode: multiply;
-        opacity: 0.35;
-        transition: background 0.1s linear;
-        pointer-events: none;
         z-index: 1;
+        background: radial-gradient(circle at 50% 45%, var(--tint, #{$blush}) 0%, transparent 65%);
+        mix-blend-mode: color;
+        opacity: 0.55;
+        transition: background 0.15s linear;
+        pointer-events: none;
     }
 
-    &__content {
-        position: relative;
-        padding: 0 64px;
-        color: $ivory;
-    }
-
-    &__eyebrow {
-        display: block;
-        font-family: $font-body;
-        font-weight: 300;
-        font-size: 0.78rem;
-        letter-spacing: 0.06em;
-        color: rgba($ivory, 0.5);
-        margin-bottom: 28px;
-    }
-
-    &__stages {
-        position: relative;
-        height: 130px;
-    }
-
-    // same fallback pattern as media frames: first stage always visible
-    // by default so it can never render blank while GSAP boots up
-    &__stage {
+    // Floating scent particles — pure CSS, drift upward and fade
+    &__particles {
         position: absolute;
         inset: 0;
+        z-index: 2;
+        overflow: hidden;
+        pointer-events: none;
+    }
+
+    &__particle {
+        position: absolute;
+        bottom: -5%;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba($gold, 0.8) 0%, rgba($ivory, 0.2) 60%, transparent 100%);
+        opacity: 0;
+        animation-name: js-signature-float;
+        animation-timing-function: ease-in-out;
+        animation-iteration-count: infinite;
+    }
+
+    // Side wayfinding spine
+    &__spine {
+        position: absolute;
+        left: 48px;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 3;
         display: flex;
         flex-direction: column;
-        gap: 10px;
-        opacity: 0;
-        visibility: hidden;
+        gap: 28px;
+    }
 
-        &:first-child {
-            opacity: 1;
-            visibility: visible;
+    &__spine-item {
+        font-family: $font-body;
+        font-weight: 300;
+        font-size: 0.8rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: rgba($ivory, 0.35);
+        transition: color 0.4s ease, letter-spacing 0.4s ease;
+
+        &--active {
+            color: $gold;
+            letter-spacing: 0.14em;
         }
     }
 
-    &__stage-label {
-        font-family: $font-heading;
-        font-weight: 600;
-        font-size: clamp(2rem, 3.4vw, 3.2rem);
-        line-height: 1.05;
+    // Huge crossfading stage typography — the centerpiece of the chamber
+    &__words {
+        position: relative;
+        z-index: 3;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
-    &__stage-notes {
+    &__word-block {
+        position: absolute;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    &__word {
+        display: block;
+        font-family: $font-heading;
+        font-weight: 700;
+        font-size: clamp(3rem, 9vw, 7.5rem);
+        line-height: 1;
+        color: $ivory;
+        opacity: 0;
+    }
+
+    &__word-notes {
+        display: block;
+        margin-top: 20px;
         font-family: $font-body;
         font-weight: 300;
         font-size: 1.05rem;
-        letter-spacing: 0.02em;
+        letter-spacing: 0.03em;
         color: $gold;
-    }
-
-    &__dots {
-        display: flex;
-        gap: 12px;
-        margin-top: 40px;
-    }
-
-    &__dot {
-        width: 7px;
-        height: 7px;
-        border-radius: 50%;
-        background: rgba($ivory, 0.3);
-        transition: background 0.4s ease, transform 0.4s ease;
-
-        &--active {
-            background: $gold;
-            transform: scale(1.4);
-        }
+        opacity: 0;
     }
 }
 
-// Tablet: keep pinned layout but tighten spacing
+@keyframes js-signature-float {
+    0% {
+        opacity: 0;
+        transform: translateY(0) translateX(0);
+    }
+
+    12% {
+        opacity: 0.7;
+    }
+
+    85% {
+        opacity: 0.5;
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(-105vh) translateX(24px);
+    }
+}
+
+// Tablet
 @media (max-width: 1024px) and (min-width: 769px) {
     .js-signature {
-        &__content {
-            padding: 0 40px;
-        }
-
-        &__stages {
-            height: 150px;
+        &__spine {
+            left: 32px;
         }
     }
 }
 
-// Mobile: no pin (handled in JS via matchMedia) — stacked, one stage per screen-ish block
+// Mobile: no pin — stacked word blocks reveal in normal flow, chamber sticky behind
 @media (max-width: 768px) {
     .js-signature {
         &__pin {
             height: auto;
-            grid-template-columns: 1fr;
-            padding: 64px 0 40px;
         }
 
-        &__media {
+        &__chamber {
             height: 60vh;
-            order: -1;
             position: sticky;
             top: 0;
-            z-index: 0;
         }
 
-        &__content {
-            position: relative;
-            z-index: 1;
-            padding: 48px 20px 0;
-            text-align: center;
+        &__spine {
+            left: 20px;
+            gap: 20px;
         }
 
-        &__eyebrow {
-            margin-bottom: 20px;
+        &__spine-item {
+            font-size: 0.72rem;
         }
 
-        &__stages {
+        &__words {
+            position: static;
             height: auto;
-            display: flex;
             flex-direction: column;
-            gap: 48px;
+            gap: 64px;
+            padding: 20vh 20px;
         }
 
-        &__stage {
+        &__word-block {
             position: relative;
-            inset: auto;
-            align-items: center;
-            // reveal handled by JS fromTo on mobile — no CSS override needed here
         }
 
-        // on mobile every text stage is its own reveal target, so all should
-        // start visible-in-flow (JS animates opacity, not layout)
-        &__stage:not(:first-child) {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        &__dots {
-            display: none;
+        &__word {
+            font-size: clamp(2.2rem, 12vw, 3.6rem);
         }
     }
 }
 
 @media (prefers-reduced-motion: reduce) {
+    .js-signature__particle {
+        animation: none;
+        opacity: 0;
+    }
 
-    .js-signature__stage,
-    .js-signature__media-frame {
-        position: relative !important;
-        opacity: 1 !important;
-        visibility: visible !important;
-        transform: none !important;
+    .js-signature__grain {
+        display: none;
     }
 }
