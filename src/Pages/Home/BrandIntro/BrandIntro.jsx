@@ -7,7 +7,7 @@ gsap.registerPlugin(ScrollTrigger);
 
 const LINES = [
     "Every Jass Silk fragrance begins",
-    "with a single thread —",
+    "with a single thread -",
     "one note strong enough to define the rest.",
 ];
 

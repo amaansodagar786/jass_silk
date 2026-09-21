@@ -2,9 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import "./HeroSection.scss";
 
-// import desktop_hero2 from "../../../assets/images/hero/desktop_hero.png";
+// import desktop_hero from "../../../assets/images/hero/desktop_hero.png";
 // import mobile_hero from "../../../assets/images/hero/mobile_hero.png";
-// import desktop_hero from "../../../assets/images/hero/desktop_hero2.png";
+// import desktop_hero2 from "../../../assets/images/hero/desktop_hero2.png";
 // import mobile_hero2 from "../../../assets/images/hero/mobile_hero2.png";
 
 const desktop_hero =
@@ -50,6 +50,35 @@ export default function HeroSection() {
     // next section. It has to be explicitly stopped/started via its own
     // API while this hero owns the scroll gesture.
     //
+    // Lenis might not be attached to `window` yet at the exact moment
+    // this component mounts — it depends on wherever Lenis is created
+    // elsewhere in the app, and that can easily happen slightly *after*
+    // this effect runs. That race is exactly why the lock worked
+    // sometimes and not others. Retry briefly (up to ~2s) until it
+    // actually shows up, then stop it immediately since the hero starts
+    // collapsed.
+    useEffect(() => {
+        let cancelled = false;
+        let attempts = 0;
+
+        function tryStop() {
+            if (cancelled) return;
+            const lenis = window.lenis;
+            if (lenis) {
+                if (!mediaFullyExpanded) lenis.stop();
+                return;
+            }
+            attempts += 1;
+            if (attempts < 40) setTimeout(tryStop, 50);
+        }
+        tryStop();
+
+        return () => {
+            cancelled = true;
+        };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     // This assumes a Lenis instance is exposed at `window.lenis` — a very
     // common setup (assigning it there right after `new Lenis()` in
     // wherever Lenis is initialized in this project, e.g. App.jsx). If
@@ -80,8 +109,12 @@ export default function HeroSection() {
         const handleWheel = (e) => {
             if (mediaFullyExpanded && e.deltaY < 0 && window.scrollY <= 5) {
                 setMediaFullyExpanded(false);
+                window.lenis?.stop();
                 e.preventDefault();
             } else if (!mediaFullyExpanded) {
+                // live check, every single event — doesn't matter whether
+                // Lenis was ready when this component mounted or not
+                window.lenis?.stop();
                 e.preventDefault();
                 const delta = e.deltaY * 0.0009;
                 const next = Math.min(Math.max(scrollProgress + delta, 0), 1);
@@ -90,6 +123,7 @@ export default function HeroSection() {
                 if (next >= EXPAND_THRESHOLD) {
                     setMediaFullyExpanded(true);
                     setShowContent(true);
+                    window.lenis?.start();
                 } else if (next < EXPAND_THRESHOLD - 0.1) {
                     setShowContent(false);
                 }
@@ -107,8 +141,10 @@ export default function HeroSection() {
 
             if (mediaFullyExpanded && deltaY < -20 && window.scrollY <= 5) {
                 setMediaFullyExpanded(false);
+                window.lenis?.stop();
                 e.preventDefault();
             } else if (!mediaFullyExpanded) {
+                window.lenis?.stop();
                 e.preventDefault();
                 const factor = deltaY < 0 ? 0.008 : 0.005;
                 const next = Math.min(Math.max(scrollProgress + deltaY * factor, 0), 1);
@@ -117,6 +153,7 @@ export default function HeroSection() {
                 if (next >= EXPAND_THRESHOLD) {
                     setMediaFullyExpanded(true);
                     setShowContent(true);
+                    window.lenis?.start();
                 } else if (next < EXPAND_THRESHOLD - 0.1) {
                     setShowContent(false);
                 }

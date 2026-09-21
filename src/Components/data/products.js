@@ -50,7 +50,7 @@ export const PRODUCTS = [
         homeImage: rotate(0)[0],
         images: rotate(0),
         description:
-            "Dark amber wrapped in smoked oud — heavy, confident, built for rooms you want to be remembered in.",
+            "Dark amber wrapped in smoked oud - heavy, confident, built for rooms you want to be remembered in.",
         proTip:
             "Layer sparingly. This one carries far, so two sprays on clothing beats four on skin.",
         howToUse:
@@ -70,7 +70,7 @@ export const PRODUCTS = [
         homeImage: rotate(1)[0],
         images: rotate(1),
         description:
-            "Jasmine opening into soft musk — a bright, wearable floral built for daylight and everyday wear.",
+            "Jasmine opening into soft musk - a bright, wearable floral built for daylight and everyday wear.",
         proTip:
             "Spray on pulse points — wrists, neck, behind the ears — and let it settle before dressing.",
         howToUse:
@@ -90,7 +90,7 @@ export const PRODUCTS = [
         homeImage: rotate(2)[0],
         images: rotate(2),
         description:
-            "Citrus over cool cedar — sharp, clean, the kind of scent that wakes a room up.",
+            "Citrus over cool cedar - sharp, clean, the kind of scent that wakes a room up.",
         proTip: "Great as a first-application scent — cologne-strength, best refreshed midday.",
         howToUse: "Two sprays to the chest and one to the wrists. Reapply after 4-5 hours.",
         categories: ["Citrus", "Cedar", "Daytime", "Fresh"],
@@ -108,7 +108,7 @@ export const PRODUCTS = [
         homeImage: rotate(3)[0],
         images: rotate(3),
         description:
-            "Warm vanilla settled over sandalwood — soft, close to skin, the scent equivalent of a good sweater.",
+            "Warm vanilla settled over sandalwood - soft, close to skin, the scent equivalent of a good sweater.",
         proTip: "Works beautifully layered under a heavier evening scent for added depth.",
         howToUse: "Two to three sprays on pulse points. Lasts 7+ hours on most skin types.",
         categories: ["Vanilla", "Sandalwood", "Evening", "Unisex"],
@@ -126,7 +126,7 @@ export const PRODUCTS = [
         homeImage: rotate(4)[0],
         images: rotate(4),
         description:
-            "Bergamot and iris in balance — powdery, a little distant, built for someone hard to pin down.",
+            "Bergamot and iris in balance - powdery, a little distant, built for someone hard to pin down.",
         proTip: "A single spray goes further than expected — this one is deceptively strong.",
         howToUse: "One to two sprays on clothing, away from direct skin for a softer trail.",
         categories: ["Bergamot", "Iris", "Evening", "Unisex"],
@@ -144,7 +144,7 @@ export const PRODUCTS = [
         homeImage: rotate(5)[0],
         images: rotate(5),
         description:
-            "Warm spice over worn leather — bold, a little rough at the edges, meant for cold evenings.",
+            "Warm spice over worn leather - bold, a little rough at the edges, meant for cold evenings.",
         proTip: "Pairs well with wool and heavier fabrics — the warmth reads stronger in winter.",
         howToUse: "Two sprays to the chest, reapply once after 6 hours if the evening runs long.",
         categories: ["Spice", "Leather", "Evening", "Bold"],
