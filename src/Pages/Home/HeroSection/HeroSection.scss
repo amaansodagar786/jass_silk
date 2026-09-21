@@ -56,14 +56,40 @@ $font-body: "Kanit", sans-serif;
         // width/height are driven inline by JS (scroll progress) —
         // only the transition easing lives here
         transition: border-radius 0.3s ease;
+    }
 
-        picture,
-        img {
+    // scroll-driven zoom — JS sets this element's transform on every
+    // scroll/touch tick
+    &__media-inner {
+        width: 100%;
+        height: 100%;
+        transition: transform 0.1s linear;
+
+        picture {
             display: block;
             width: 100%;
             height: 100%;
-            object-fit: cover;
-            transition: transform 0.1s linear;
+        }
+    }
+
+    // continuous "living" zoom — pure CSS, runs forever regardless of
+    // scroll, on a different element than the one above so the two
+    // transforms compose instead of overwriting each other
+    &__media-img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        animation: js-hero-media-live-zoom 10s ease-in-out infinite alternate;
+    }
+
+    @keyframes js-hero-media-live-zoom {
+        0% {
+            transform: scale(1);
+        }
+
+        100% {
+            transform: scale(1.09);
         }
     }
 
@@ -184,9 +210,11 @@ $font-body: "Kanit", sans-serif;
     .js-hero-section {
 
         &__media,
-        &__media img,
+        &__media-inner,
+        &__media-img,
         &__word {
             transition: none !important;
+            animation: none !important;
         }
     }
 }

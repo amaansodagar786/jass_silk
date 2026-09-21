@@ -223,14 +223,25 @@ export default function HeroSection() {
                     className="js-hero-section__media"
                     style={{ width: `${mediaWidth}px`, height: `${mediaHeight}px` }}
                 >
-                    <picture>
-                        <source media="(max-width: 768px)" srcSet={mobile_hero2} />
-                        <img
-                            src={desktop_hero2}
-                            alt="Jass Silk perfume"
-                            style={{ transform: `scale(${imgScale})` }}
-                        />
-                    </picture>
+                    {/* scroll-driven zoom lives here */}
+                    <div
+                        className="js-hero-section__media-inner"
+                        style={{ transform: `scale(${imgScale})` }}
+                    >
+                        {/* continuous slow "Ken Burns" zoom lives on the img
+                            itself via CSS animation — a separate element
+                            from the one JS controls above, so the two
+                            transforms never fight each other and the image
+                            always feels like it's gently, endlessly alive */}
+                        <picture>
+                            <source media="(max-width: 768px)" srcSet={mobile_hero2} />
+                            <img
+                                className="js-hero-section__media-img"
+                                src={desktop_hero2}
+                                alt="Jass Silk perfume"
+                            />
+                        </picture>
+                    </div>
                     <motion.div
                         className="js-hero-section__media-scrim"
                         initial={{ opacity: 0.55 }}
