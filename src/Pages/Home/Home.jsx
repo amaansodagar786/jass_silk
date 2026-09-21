@@ -8,18 +8,21 @@ import Craft from './Craft/Craft';
 import ExperienceCursor from './ExperienceCursor/ExperienceCursor';
 
 import about from "../../assets/images/about.png"
+import HeroSection from './HeroSection/HeroSection';
 
 const Home = () => {
   return (
     <>
-      <HeroTypography />
+
+      <HeroSection />
+      {/* <HeroTypography /> */}
       <BrandIntro image={about} />
       <SignatureHighlight />
-      <ProductsShowcase/>
-      <Craft/>
-    
-      <ExperienceCursor/>
-      
+      <ProductsShowcase />
+      <Craft />
+
+      <ExperienceCursor />
+
     </>
   )
 }

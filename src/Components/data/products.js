@@ -45,6 +45,8 @@ export const PRODUCTS = [
         currency: "₹",
         price: 3400,
         compareAtPrice: 4200,
+        // teal, from the Silk Classic box packaging
+        accentColor: "#1FA8A0",
         homeImage: rotate(0)[0],
         images: rotate(0),
         description:
@@ -63,6 +65,8 @@ export const PRODUCTS = [
         currency: "₹",
         price: 3200,
         compareAtPrice: 3900,
+        // royal blue, from the Silk Patola box packaging
+        accentColor: "#1B2A6B",
         homeImage: rotate(1)[0],
         images: rotate(1),
         description:
@@ -81,6 +85,8 @@ export const PRODUCTS = [
         currency: "₹",
         price: 2900,
         compareAtPrice: null,
+        // deep purple, from the Silk Kanjeevaram box packaging
+        accentColor: "#4B1D6B",
         homeImage: rotate(2)[0],
         images: rotate(2),
         description:
@@ -97,6 +103,8 @@ export const PRODUCTS = [
         currency: "₹",
         price: 3600,
         compareAtPrice: 4400,
+        // magenta/pink, from the Silk Paithani box packaging
+        accentColor: "#C2185B",
         homeImage: rotate(3)[0],
         images: rotate(3),
         description:
@@ -113,6 +121,8 @@ export const PRODUCTS = [
         currency: "₹",
         price: 3100,
         compareAtPrice: 3700,
+        // forest green, from the Silk Pochampally box packaging
+        accentColor: "#1F4D2C",
         homeImage: rotate(4)[0],
         images: rotate(4),
         description:
@@ -129,6 +139,8 @@ export const PRODUCTS = [
         currency: "₹",
         price: 3500,
         compareAtPrice: 4100,
+        // deep maroon, from the Silk Banarasi box packaging
+        accentColor: "#6E1220",
         homeImage: rotate(5)[0],
         images: rotate(5),
         description:

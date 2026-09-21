@@ -80,6 +80,17 @@ function ArrowIcon({ direction }) {
   );
 }
 
+// Click ripple, shared by both Buy Now buttons — reads its own ripple
+// span straight off the clicked button, no per-button refs needed
+function spawnRipple(e) {
+  const btn = e.currentTarget;
+  const ripple = btn.querySelector(".js-product__ripple");
+  if (!ripple) return;
+  const rect = btn.getBoundingClientRect();
+  gsap.set(ripple, { left: e.clientX - rect.left, top: e.clientY - rect.top, scale: 0, opacity: 0.5 });
+  gsap.to(ripple, { scale: 6, opacity: 0, duration: 0.7, ease: "power2.out" });
+}
+
 export default function ProductPage() {
   const { id } = useParams();
   const product = getProductById(id);
@@ -88,6 +99,11 @@ export default function ProductPage() {
   const intervalRef = useRef(null);
   const [current, setCurrent] = useState(0);
   const total = product?.images?.length || 0;
+
+  const frameRefs = useRef([]);
+  frameRefs.current = [];
+  const addFrameRef = (el) => el && frameRefs.current.push(el);
+  const frameRaf = useRef(null);
 
   const discountPct =
     product?.compareAtPrice && product.price
@@ -120,6 +136,7 @@ export default function ProductPage() {
     restartAutoplay();
   }
 
+  // scroll reveals for everything below the fold (unchanged behaviour)
   useEffect(() => {
     if (!product) return;
     const ctx = gsap.context(() => {
@@ -142,6 +159,53 @@ export default function ProductPage() {
     return () => ctx.revert();
   }, [product]);
 
+  // hero entrance — plays once on mount, above the fold so it isn't scroll-triggered
+  useEffect(() => {
+    if (!product) return;
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({ delay: 0.1 });
+      tl.fromTo(".js-product__hero-kicker", { autoAlpha: 0, y: 10 }, { autoAlpha: 1, y: 0, duration: 0.6, ease: "power2.out" })
+        .fromTo(
+          ".js-product__hero-media",
+          { clipPath: "inset(100% 0% 0% 0%)" },
+          { clipPath: "inset(0% 0% 0% 0%)", duration: 1.1, ease: "power4.inOut" },
+          "-=0.3"
+        )
+        .fromTo(".js-product__hero-name", { autoAlpha: 0, y: 30 }, { autoAlpha: 1, y: 0, duration: 0.8, ease: "power3.out" }, "-=0.6")
+        .fromTo(
+          ".js-product__hero-buy > *",
+          { autoAlpha: 0, y: 16 },
+          { autoAlpha: 1, y: 0, duration: 0.6, ease: "power2.out", stagger: 0.1 },
+          "-=0.4"
+        );
+    }, rootRef);
+
+    return () => ctx.revert();
+  }, [product]);
+
+  // subtle mouse-tilt on whichever bento gallery frame is being hovered
+  const handleFrameMove = (e, el) => {
+    const rect = el.getBoundingClientRect();
+    const relX = (e.clientX - rect.left) / rect.width - 0.5;
+    const relY = (e.clientY - rect.top) / rect.height - 0.5;
+
+    cancelAnimationFrame(frameRaf.current);
+    frameRaf.current = requestAnimationFrame(() => {
+      gsap.to(el.querySelector("img"), {
+        rotateY: relX * 6,
+        rotateX: relY * -6,
+        scale: 1.06,
+        duration: 0.5,
+        ease: "power2.out",
+        overwrite: true,
+      });
+    });
+  };
+  const handleFrameLeave = (el) => {
+    cancelAnimationFrame(frameRaf.current);
+    gsap.to(el.querySelector("img"), { rotateX: 0, rotateY: 0, scale: 1, duration: 0.5, ease: "power3.out", overwrite: true });
+  };
+
   // no matching product for this :id — simple fallback, no crash
   if (!product) {
     return (
@@ -152,8 +216,17 @@ export default function ProductPage() {
     );
   }
 
+  // Each product carries its own packaging accent color (set on the
+  // product data, e.g. `accentColor: "#1FA8A0"` for Silk Classic's teal
+  // box). We expose it as a CSS variable here — every accent spot in the
+  // SCSS reads `var(--accent, $gold)`, so anything without a color yet
+  // just falls back to the site's default gold, nothing breaks.
+  const accentStyle = product.accentColor ? { "--accent": product.accentColor } : undefined;
+
   return (
-    <main className="js-product" ref={rootRef}>
+    <main className="js-product" ref={rootRef} style={accentStyle}>
+      <div className="js-product__grain" aria-hidden="true" />
+
       {/* ---------- opening spread ---------- */}
       <section className="js-product__hero">
         <span className="js-product__hero-kicker">{product.tagline}</span>
@@ -180,8 +253,9 @@ export default function ProductPage() {
               </>
             )}
           </div>
-          <button className="js-product__cta" type="button">
+          <button className="js-product__cta" type="button" data-cursor="buy" onClick={spawnRipple}>
             Buy Now
+            <span className="js-product__ripple" aria-hidden="true" />
           </button>
         </div>
       </section>
@@ -194,7 +268,14 @@ export default function ProductPage() {
             style={{ "--current": current }}
           >
             {product.images.map((src, i) => (
-              <div className="js-product__gallery-frame" key={i}>
+              <div
+                className="js-product__gallery-frame"
+                key={i}
+                ref={addFrameRef}
+                data-cursor="view"
+                onMouseMove={(e) => handleFrameMove(e, e.currentTarget)}
+                onMouseLeave={(e) => handleFrameLeave(e.currentTarget)}
+              >
                 <img src={src} alt={`${product.name} — view ${i + 1}`} />
               </div>
             ))}
@@ -205,6 +286,7 @@ export default function ProductPage() {
             type="button"
             aria-label="Previous image"
             onClick={goPrev}
+            data-cursor="link"
           >
             <ArrowIcon direction="prev" />
           </button>
@@ -213,6 +295,7 @@ export default function ProductPage() {
             type="button"
             aria-label="Next image"
             onClick={goNext}
+            data-cursor="link"
           >
             <ArrowIcon direction="next" />
           </button>
@@ -280,8 +363,9 @@ export default function ProductPage() {
             </span>
           )}
         </div>
-        <button className="js-product__cta" type="button">
+        <button className="js-product__cta" type="button" data-cursor="buy" onClick={spawnRipple}>
           Buy Now
+          <span className="js-product__ripple" aria-hidden="true" />
         </button>
       </div>
     </main>

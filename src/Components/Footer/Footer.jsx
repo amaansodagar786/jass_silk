@@ -154,7 +154,7 @@ export default function Footer() {
                                 onMouseEnter={() => setActive(p)}
                             >
                                 <a
-                                    href={`/product-v2/${p.id}`}
+                                    href={`/product/${p.id}`}
                                     className="js-footer__product-link"
                                     data-cursor="view"
                                     onFocus={() => setActive(p)}

@@ -17,7 +17,7 @@ const STAGES = [
     label: "Top",
     full: "Top Notes",
     notes: "Citrus · Bergamot",
-    blurb: "Bright and immediate — the first breath of the fragrance.",
+    blurb: "Bright and immediate - the first breath of the fragrance.",
     tint: "#E8D5C4",
     image:
       "https://images.unsplash.com/photo-1507598641400-ec3536ba81bc?w=1600&q=80&auto=format&fit=crop",
@@ -27,7 +27,7 @@ const STAGES = [
     label: "Heart",
     full: "Heart Notes",
     notes: "Jasmine · Amber",
-    blurb: "Warm and floral — the soul that lingers through the day.",
+    blurb: "Warm and floral - the soul that lingers through the day.",
     tint: "#C9A66B",
     image:
       "https://images.unsplash.com/photo-1684472993236-b605bb80ca0b?w=1600&q=80&auto=format&fit=crop",
@@ -37,7 +37,7 @@ const STAGES = [
     label: "Base",
     full: "Base Notes",
     notes: "Musk · Sandalwood",
-    blurb: "Deep and grounding — what stays on skin long after.",
+    blurb: "Deep and grounding - what stays on skin long after.",
     tint: "#8A6A46",
     image:
       "https://images.unsplash.com/photo-1702001145743-094b0b7ead51?w=1600&q=80&auto=format&fit=crop",

@@ -1,0 +1,192 @@
+$ivory: #F5F1EA;
+$onyx: #1A1A1A;
+$gold: #C9A66B;
+$blush: #E8D5C4;
+
+$font-heading: "Sora", sans-serif;
+$font-body: "Kanit", sans-serif;
+
+.js-hero-section {
+    position: relative;
+    height: 100dvh;
+    overflow: hidden;
+    background: $onyx;
+
+    // ================= BACKGROUND (static, dims on scroll-in) =================
+    &__bg {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+
+        picture,
+        img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    }
+
+    &__bg-scrim {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(180deg, rgba($onyx, 0.35) 0%, rgba($onyx, 0.15) 45%, rgba($onyx, 0.5) 100%);
+    }
+
+    // ================= STAGE (expanding media + parting headline) =================
+    &__stage {
+        position: relative;
+        z-index: 1;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    &__media {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        max-width: 95vw;
+        max-height: 85vh;
+        overflow: hidden;
+        border-radius: 6px;
+        box-shadow: 0 30px 70px -20px rgba($onyx, 0.5);
+        // width/height are driven inline by JS (scroll progress) —
+        // only the transition easing lives here
+        transition: border-radius 0.3s ease;
+
+        picture,
+        img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.1s linear;
+        }
+    }
+
+    &__media-scrim {
+        position: absolute;
+        inset: 0;
+        background: $onyx;
+        pointer-events: none;
+    }
+
+    &__headline {
+        position: relative;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.25em;
+        pointer-events: none;
+    }
+
+    &__word {
+        font-family: $font-heading;
+        font-weight: 700;
+        font-size: clamp(2.8rem, 9vw, 7.5rem);
+        line-height: 0.95;
+        letter-spacing: 0.01em;
+        color: $ivory;
+        text-shadow: 0 4px 30px rgba($onyx, 0.4);
+        transition: transform 0.1s linear;
+    }
+
+    // ================= CONTENT (revealed once fully expanded) =================
+    &__content {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        padding: 48px 24px 64px;
+    }
+
+    &__tagline {
+        margin: 0 0 26px;
+        font-family: $font-body;
+        font-weight: 300;
+        font-size: 1.05rem;
+        letter-spacing: 0.02em;
+        color: rgba($ivory, 0.75);
+    }
+
+    &__cta {
+        font-family: $font-body;
+        font-weight: 400;
+        font-size: 0.85rem;
+        letter-spacing: 0.03em;
+        color: $onyx;
+        background: $gold;
+        padding: 15px 36px;
+        text-decoration: none;
+        border-radius: 2px;
+        position: relative;
+        overflow: hidden;
+        z-index: 0;
+
+        &::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: $ivory;
+            transform: translateX(-101%);
+            transition: transform 0.35s ease;
+            z-index: -1;
+        }
+
+        &:hover::before {
+            transform: translateX(0);
+        }
+    }
+}
+
+// Tablet
+@media (max-width: 1024px) {
+    .js-hero-section {
+        &__word {
+            font-size: clamp(2.2rem, 7vw, 5rem);
+        }
+    }
+}
+
+// Mobile
+@media (max-width: 600px) {
+    .js-hero-section {
+        &__word {
+            font-size: clamp(1.9rem, 11vw, 3.4rem);
+        }
+
+        &__content {
+            padding: 32px 20px 48px;
+        }
+
+        &__tagline {
+            font-size: 0.95rem;
+        }
+
+        &__cta {
+            padding: 14px 30px;
+            font-size: 0.8rem;
+        }
+    }
+}
+
+// Respect reduced motion — the JS still drives progress on scroll input
+// (that part needs real interaction to disable), but at minimum this
+// removes the smoothing transitions so any residual movement is a hard
+// cut rather than continuous motion
+@media (prefers-reduced-motion: reduce) {
+    .js-hero-section {
+
+        &__media,
+        &__media img,
+        &__word {
+            transition: none !important;
+        }
+    }
+}
