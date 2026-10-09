@@ -7,7 +7,7 @@ import ProductsShowcase from './ProductsShowcase/ProductsShowcase';
 import Craft from './Craft/Craft';
 import ExperienceCursor from './ExperienceCursor/ExperienceCursor';
 
-import about from "../../assets/images/about.png"
+import about from "../../assets/images/home/about.png"
 import HeroSection from './HeroSection/HeroSection';
 
 const Home = () => {

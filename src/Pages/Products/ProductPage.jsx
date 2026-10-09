@@ -95,10 +95,14 @@ export default function ProductPage() {
   const { id } = useParams();
   const product = getProductById(id);
 
+  // hero uses images[0]; gallery (desktop grid + mobile slider) starts
+  // from the 2nd image so the hero image isn't shown twice
+  const galleryImages = product?.images?.slice(1) || [];
+
   const rootRef = useRef(null);
   const intervalRef = useRef(null);
   const [current, setCurrent] = useState(0);
-  const total = product?.images?.length || 0;
+  const total = galleryImages.length;
 
   const frameRefs = useRef([]);
   frameRefs.current = [];
@@ -267,7 +271,7 @@ export default function ProductPage() {
             className="js-product__gallery-track"
             style={{ "--current": current }}
           >
-            {product.images.map((src, i) => (
+            {galleryImages.map((src, i) => (
               <div
                 className="js-product__gallery-frame"
                 key={i}
@@ -276,7 +280,7 @@ export default function ProductPage() {
                 onMouseMove={(e) => handleFrameMove(e, e.currentTarget)}
                 onMouseLeave={(e) => handleFrameLeave(e.currentTarget)}
               >
-                <img src={src} alt={`${product.name} — view ${i + 1}`} />
+                <img src={src} alt={`${product.name} — view ${i + 2}`} />
               </div>
             ))}
           </div>

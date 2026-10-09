@@ -1,30 +1,52 @@
 // src/data/products.js
-//
+import home_classic from "../../assets/images/products/home/classic.png"
+import home_banarasi from "../../assets/images/products/home/banarasi.png"
+import home_kanjeevaram from "../../assets/images/products/home/kanjeevaram.png"
+import home_paithani from "../../assets/images/products/home/paithani.png"
+import home_patola from "../../assets/images/products/home/patola.png"
+import home_pochampally from "../../assets/images/products/home/pochampally.png"
+
+import classic1 from "../../assets/images/products/classic/classic1.png"
+import classic2 from "../../assets/images/products/classic/classic2.png"
+import classic3 from "../../assets/images/products/classic/classic3.png"
+import classic4 from "../../assets/images/products/classic/classic4.png"
+
+import patola1 from "../../assets/images/products/patola/patola1.png"
+import patola2 from "../../assets/images/products/patola/patola2.png"
+import patola3 from "../../assets/images/products/patola/patola3.png"
+import patola4 from "../../assets/images/products/patola/patola4.png"
+
+import paithani1 from "../../assets/images/products/paithani/paithani1.png"
+import paithani2 from "../../assets/images/products/paithani/paithani2.png"
+import paithani3 from "../../assets/images/products/paithani/paithani3.png"
+import paithani4 from "../../assets/images/products/paithani/paithani4.png"
+
+import banarasi1 from "../../assets/images/products/banarasi/banarasi1.png"
+import banarasi2 from "../../assets/images/products/banarasi/banarasi2.jpg"
+import banarasi3 from "../../assets/images/products/banarasi/banarasi3.png"
+import banarasi4 from "../../assets/images/products/banarasi/banarasi4.png"
+
+import kanjeevaram1 from "../../assets/images/products/kanjeevaram/kanjeevaram1.png"
+import kanjeevaram2 from "../../assets/images/products/kanjeevaram/kanjeevaram2.png"
+import kanjeevaram3 from "../../assets/images/products/kanjeevaram/kanjeevaram3.png"
+import kanjeevaram4 from "../../assets/images/products/kanjeevaram/kanjeevaram4.png"
+
+import pochampally1 from "../../assets/images/products/pochampally/pochampally1.png"
+import pochampally2 from "../../assets/images/products/pochampally/pochampally2.png"
+import pochampally3 from "../../assets/images/products/pochampally/pochampally3.png"
+import pochampally4 from "../../assets/images/products/pochampally/pochampally4.png"
+
 // Single source of truth for product data — used by both the home page
-// showcase (1 image per card) and the single product page (6 images in
-// the gallery). All images are Unsplash placeholders for now — swap
-// `homeImage` / `images` for real local imports whenever photography is
-// ready (same pattern ProductsShowcase.jsx already used before).
+// showcase (1 image per card) and the single product page (gallery).
+// Each product has its own gallery. images[0] is the hero on the
+// product page, the rest go in the gallery grid / mobile slider.
 
-const unsplash = (id, width = 1600) =>
-    `https://images.unsplash.com/${id}?w=${width}&q=80&auto=format&fit=crop`;
-
-// shared placeholder pool — light theme only, no dark/black shots
-const POOL = [
-    unsplash("photo-1589493732575-11a963a7c415"), // gold bottle, floral textile
-    unsplash("photo-1720967361123-9c17ec9025dc"), // bottle beside a potted plant
-    unsplash("photo-1621275155732-2bff82c64fd2"), // clear glass, warm textile
-    unsplash("photo-1694422789021-54bd74b39f52"), // vivid citrus tone
-    unsplash("photo-1709662369957-0cbf9f8452fc"), // honey-toned pour shot
-    unsplash("photo-1584841247175-4d766cefa018"), // gold accent bottle
-];
-
-// rotates the shared pool so each product's gallery starts on a
-// different image — just for placeholder variety, not meaningful once
-// real photography replaces this
-function rotate(offset) {
-    return [...POOL.slice(offset), ...POOL.slice(0, offset)];
-}
+const CLASSIC_GALLERY = [classic1, classic2, classic3, classic4];
+const PATOLA_GALLERY = [patola1, patola2, patola3, patola4];
+const KANJEEVARAM_GALLERY = [kanjeevaram1, kanjeevaram2, kanjeevaram3, kanjeevaram4];
+const PAITHANI_GALLERY = [paithani1, paithani2, paithani3, paithani4];
+const POCHAMPALLY_GALLERY = [pochampally1, pochampally2, pochampally3, pochampally4];
+const BANARASI_GALLERY = [banarasi1, banarasi2, banarasi3, banarasi4];
 
 // same 6 highlight cards on every product for now — edit per-product
 // later if some perfumes need different claims (e.g. not vegan)
@@ -47,8 +69,8 @@ export const PRODUCTS = [
         compareAtPrice: 4200,
         // teal, from the Silk Classic box packaging
         accentColor: "#1FA8A0",
-        homeImage: rotate(0)[0],
-        images: rotate(0),
+        homeImage: home_classic,
+        images: CLASSIC_GALLERY,
         description:
             "Dark amber wrapped in smoked oud - heavy, confident, built for rooms you want to be remembered in.",
         proTip:
@@ -67,8 +89,8 @@ export const PRODUCTS = [
         compareAtPrice: 3900,
         // royal blue, from the Silk Patola box packaging
         accentColor: "#1B2A6B",
-        homeImage: rotate(1)[0],
-        images: rotate(1),
+        homeImage: home_patola,
+        images: PATOLA_GALLERY,
         description:
             "Jasmine opening into soft musk - a bright, wearable floral built for daylight and everyday wear.",
         proTip:
@@ -87,8 +109,8 @@ export const PRODUCTS = [
         compareAtPrice: null,
         // deep purple, from the Silk Kanjeevaram box packaging
         accentColor: "#4B1D6B",
-        homeImage: rotate(2)[0],
-        images: rotate(2),
+        homeImage: home_kanjeevaram,
+        images: KANJEEVARAM_GALLERY,
         description:
             "Citrus over cool cedar - sharp, clean, the kind of scent that wakes a room up.",
         proTip: "Great as a first-application scent — cologne-strength, best refreshed midday.",
@@ -105,8 +127,8 @@ export const PRODUCTS = [
         compareAtPrice: 4400,
         // magenta/pink, from the Silk Paithani box packaging
         accentColor: "#C2185B",
-        homeImage: rotate(3)[0],
-        images: rotate(3),
+        homeImage: home_paithani,
+        images: PAITHANI_GALLERY,
         description:
             "Warm vanilla settled over sandalwood - soft, close to skin, the scent equivalent of a good sweater.",
         proTip: "Works beautifully layered under a heavier evening scent for added depth.",
@@ -123,8 +145,8 @@ export const PRODUCTS = [
         compareAtPrice: 3700,
         // forest green, from the Silk Pochampally box packaging
         accentColor: "#1F4D2C",
-        homeImage: rotate(4)[0],
-        images: rotate(4),
+        homeImage: home_pochampally,
+        images: POCHAMPALLY_GALLERY,
         description:
             "Bergamot and iris in balance - powdery, a little distant, built for someone hard to pin down.",
         proTip: "A single spray goes further than expected — this one is deceptively strong.",
@@ -141,8 +163,8 @@ export const PRODUCTS = [
         compareAtPrice: 4100,
         // deep maroon, from the Silk Banarasi box packaging
         accentColor: "#6E1220",
-        homeImage: rotate(5)[0],
-        images: rotate(5),
+        homeImage: home_banarasi,
+        images: BANARASI_GALLERY,
         description:
             "Warm spice over worn leather - bold, a little rough at the edges, meant for cold evenings.",
         proTip: "Pairs well with wool and heavier fabrics — the warmth reads stronger in winter.",

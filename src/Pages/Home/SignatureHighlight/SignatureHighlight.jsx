@@ -2,6 +2,9 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import "./SignatureHighlight.scss";
+import image1 from "../../../assets/images/home/note1.png"
+import image2 from "../../../assets/images/home/note2.png"
+import image3 from "../../../assets/images/home/note3.png"
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -20,7 +23,7 @@ const STAGES = [
     blurb: "Bright and immediate - the first breath of the fragrance.",
     tint: "#E8D5C4",
     image:
-      "https://images.unsplash.com/photo-1507598641400-ec3536ba81bc?w=1600&q=80&auto=format&fit=crop",
+      image1,
   },
   {
     key: "heart",
@@ -30,7 +33,7 @@ const STAGES = [
     blurb: "Warm and floral - the soul that lingers through the day.",
     tint: "#C9A66B",
     image:
-      "https://images.unsplash.com/photo-1684472993236-b605bb80ca0b?w=1600&q=80&auto=format&fit=crop",
+      image2,
   },
   {
     key: "base",
@@ -40,7 +43,7 @@ const STAGES = [
     blurb: "Deep and grounding - what stays on skin long after.",
     tint: "#8A6A46",
     image:
-      "https://images.unsplash.com/photo-1702001145743-094b0b7ead51?w=1600&q=80&auto=format&fit=crop",
+      image3,
   },
 ];
 
