@@ -5,11 +5,21 @@ $blush: #E8D5C4;
 
 $font-body: "Kanit", sans-serif;
 
-// Hide the native cursor site-wide, but only when JS confirmed a fine pointer.
-// Scoped to a class toggled by CustomCursor.jsx — never a blind global override.
 body.js-cursor-none,
 body.js-cursor-none * {
     cursor: none !important;
+}
+
+// Footer: always the normal system cursor
+body.js-cursor-none .js-footer,
+body.js-cursor-none .js-footer * {
+    cursor: auto !important;
+}
+
+body.js-cursor-none .js-footer a,
+body.js-cursor-none .js-footer button,
+body.js-cursor-none .js-footer [role="button"] {
+    cursor: pointer !important;
 }
 
 .js-cursor {

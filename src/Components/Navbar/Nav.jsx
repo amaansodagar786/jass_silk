@@ -119,7 +119,7 @@ export default function Nav() {
                             aria-controls="collection-panel"
                             data-cursor="link"
                         >
-                            Collection
+                            COLLECTION
                         </button>
                     </div>
 

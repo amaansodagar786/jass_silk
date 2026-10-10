@@ -116,7 +116,7 @@ export default function ProductsShowcase() {
                 </div>
             </div>
 
-            <div className="js-products__swiper-wrap" data-cursor="drag">
+            <div className="js-products__swiper-wrap">
                 <Swiper
                     modules={[Navigation]}
                     onSwiper={(s) => {

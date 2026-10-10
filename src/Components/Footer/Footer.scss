@@ -21,7 +21,7 @@ $preview-h: 290px;
     // ── Top: collection (left) + info (right) ────────────────────────────
     &__top {
         position: relative;
-        max-width: 1200px;
+        max-width: 1100px;
         margin: 0 auto;
         display: grid;
         grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.8fr);
@@ -114,7 +114,7 @@ $preview-h: 290px;
         display: inline-block;
         font-family: $font-flow;
         font-weight: 400;
-        font-size: clamp(2.2rem, 3.8vw, 3.5rem);
+        font-size: clamp(1.5rem, 3.8vw, 2rem);
         line-height: 1.08;
         transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), color 0.35s ease;
     }

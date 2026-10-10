@@ -241,7 +241,7 @@ export default function Footer() {
                     © {new Date().getFullYear()} Jass Perfumes. All rights reserved.
                 </span>
                 <span className="js-footer__credit">
-                    Design &amp; Developed by <a href="#">Techorses</a>
+                    Design &amp; Developed by <a href="https://techorses.com">Techorses</a>
                 </span>
             </div>
 
