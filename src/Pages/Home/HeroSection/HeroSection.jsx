@@ -8,10 +8,7 @@ import mobilehero1 from "../../../assets/images/home/hero/mobile-hero.png"
 import hero2 from "../../../assets/images/home/hero/middle-hero.png"
 import mobilehero2 from "../../../assets/images/home/hero/mobile-middle.png"
 
-// import desktop_hero from "../../../assets/images/hero/desktop_hero.png";
-// import mobile_hero from "../../../assets/images/hero/mobile_hero.png";
-// import desktop_hero2 from "../../../assets/images/hero/desktop_hero2.png";
-// import mobile_hero2 from "../../../assets/images/hero/mobile_hero2.png";
+
 
 const desktop_hero =
     hero1;
@@ -32,6 +29,27 @@ const HEADLINE_REST = "SILK";
 // and hands control back to normal page scroll — NOT 100%, so the last
 // bit of the gesture doesn't need to be spent just to unlock
 const EXPAND_THRESHOLD = 0.85;
+
+// ================= MIDDLE IMAGE SIZES =================
+// START = size of the middle image before any scroll (default state)
+// END   = size of the middle image once fully expanded
+//
+// >>> TO MAKE THE MOBILE DEFAULT IMAGE SMALLER OR BIGGER, CHANGE ONLY
+// >>> MOBILE_START_WIDTH and MOBILE_START_HEIGHT below.
+// >>> Keep the ratio about 0.66 (width / height) so the image doesn't
+// >>> get cropped. Examples:
+// >>>   smaller -> 240 x 363
+// >>>   current -> 260 x 393
+// >>>   bigger  -> 280 x 423
+const MOBILE_START_WIDTH = 240;
+const MOBILE_START_HEIGHT = 363;
+const MOBILE_END_WIDTH = 880;
+const MOBILE_END_HEIGHT = 680;
+
+const DESKTOP_START_WIDTH = 320;
+const DESKTOP_START_HEIGHT = 420;
+const DESKTOP_END_WIDTH = 1500;
+const DESKTOP_END_HEIGHT = 840;
 
 export default function HeroSection() {
     const sectionRef = useRef(null);
@@ -198,9 +216,16 @@ export default function HeroSection() {
     // hero unlocks, rather than only 85% grown at that point
     const visualProgress = Math.min(scrollProgress / EXPAND_THRESHOLD, 1);
 
-    // media box grows from a small window to (nearly) full screen
-    const mediaWidth = 320 + visualProgress * (isMobile ? 560 : 1180);
-    const mediaHeight = 420 + visualProgress * (isMobile ? 260 : 420);
+    // media box grows from its START size to its END size (separate
+    // values for mobile and desktop — see the constants at the top)
+    const startWidth = isMobile ? MOBILE_START_WIDTH : DESKTOP_START_WIDTH;
+    const startHeight = isMobile ? MOBILE_START_HEIGHT : DESKTOP_START_HEIGHT;
+    const endWidth = isMobile ? MOBILE_END_WIDTH : DESKTOP_END_WIDTH;
+    const endHeight = isMobile ? MOBILE_END_HEIGHT : DESKTOP_END_HEIGHT;
+
+    const mediaWidth = startWidth + visualProgress * (endWidth - startWidth);
+    const mediaHeight = startHeight + visualProgress * (endHeight - startHeight);
+
     // a slight extra zoom on the image itself, on top of the box growing —
     // this is the "live/zoom" feel, not just a resizing frame
     const imgScale = 1.18 - visualProgress * 0.18;
