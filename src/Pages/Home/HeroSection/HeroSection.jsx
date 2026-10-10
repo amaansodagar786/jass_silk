@@ -3,7 +3,10 @@ import { motion } from "framer-motion";
 import "./HeroSection.scss";
 
 import hero1 from "../../../assets/images/home/hero/hero.png"
+import mobilehero1 from "../../../assets/images/home/hero/mobile-hero.png"
+
 import hero2 from "../../../assets/images/home/hero/middle-hero.png"
+import mobilehero2 from "../../../assets/images/home/hero/mobile-middle.png"
 
 // import desktop_hero from "../../../assets/images/hero/desktop_hero.png";
 // import mobile_hero from "../../../assets/images/hero/mobile_hero.png";
@@ -14,13 +17,13 @@ const desktop_hero =
     hero1;
 
 const mobile_hero =
-    "https://images.unsplash.com/photo-1547887537-6158d64c35b3?q=80&w=900&auto=format&fit=crop";
+    mobilehero1;
 
 const desktop_hero2 =
     hero2;
 
 const mobile_hero2 =
-    "https://images.unsplash.com/photo-1594035910387-fea47794261f?q=80&w=900&auto=format&fit=crop";
+    mobilehero2;
 
 const HEADLINE_FIRST = "JASS";
 const HEADLINE_REST = "SILK";

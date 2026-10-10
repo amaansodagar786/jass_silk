@@ -11,35 +11,66 @@ import classic2 from "../../assets/images/products/classic/classic2.png"
 import classic3 from "../../assets/images/products/classic/classic3.png"
 import classic4 from "../../assets/images/products/classic/classic4.png"
 
+import mobileclassic1 from "../../assets/images/products/classic/mobileclassic1.png"
+import mobileclassic2 from "../../assets/images/products/classic/mobileclassic2.png"
+import mobileclassic3 from "../../assets/images/products/classic/mobileclassic3.png"
+import mobileclassic4 from "../../assets/images/products/classic/mobileclassic4.png"
+
 import patola1 from "../../assets/images/products/patola/patola1.png"
 import patola2 from "../../assets/images/products/patola/patola2.png"
 import patola3 from "../../assets/images/products/patola/patola3.png"
 import patola4 from "../../assets/images/products/patola/patola4.png"
+
+import mobilepatola1 from "../../assets/images/products/patola/mobilepatola1.png"
+import mobilepatola2 from "../../assets/images/products/patola/mobilepatola2.png"
+import mobilepatola3 from "../../assets/images/products/patola/mobilepatola3.png"
+import mobilepatola4 from "../../assets/images/products/patola/mobilepatola4.png"
 
 import paithani1 from "../../assets/images/products/paithani/paithani1.png"
 import paithani2 from "../../assets/images/products/paithani/paithani2.png"
 import paithani3 from "../../assets/images/products/paithani/paithani3.png"
 import paithani4 from "../../assets/images/products/paithani/paithani4.png"
 
+import mobilepaithani1 from "../../assets/images/products/paithani/mobilepaithani1.png"
+import mobilepaithani2 from "../../assets/images/products/paithani/mobilepaithani2.png"
+import mobilepaithani3 from "../../assets/images/products/paithani/mobilepaithani3.png"
+import mobilepaithani4 from "../../assets/images/products/paithani/mobilepaithani4.png"
+
 import banarasi1 from "../../assets/images/products/banarasi/banarasi1.png"
-import banarasi2 from "../../assets/images/products/banarasi/banarasi2.jpg"
+import banarasi2 from "../../assets/images/products/banarasi/banarasi2.png"
 import banarasi3 from "../../assets/images/products/banarasi/banarasi3.png"
 import banarasi4 from "../../assets/images/products/banarasi/banarasi4.png"
+
+import mobilebanarasi1 from "../../assets/images/products/banarasi/mobilebanarasi1.png"
+import mobilebanarasi2 from "../../assets/images/products/banarasi/mobilebanarasi2.png"
+import mobilebanarasi3 from "../../assets/images/products/banarasi/mobilebanarasi3.png"
+import mobilebanarasi4 from "../../assets/images/products/banarasi/mobilebanarasi4.png"
 
 import kanjeevaram1 from "../../assets/images/products/kanjeevaram/kanjeevaram1.png"
 import kanjeevaram2 from "../../assets/images/products/kanjeevaram/kanjeevaram2.png"
 import kanjeevaram3 from "../../assets/images/products/kanjeevaram/kanjeevaram3.png"
 import kanjeevaram4 from "../../assets/images/products/kanjeevaram/kanjeevaram4.png"
 
+import mobilekanjeevaram1 from "../../assets/images/products/kanjeevaram/mobilekanjeevaram1.png"
+import mobilekanjeevaram2 from "../../assets/images/products/kanjeevaram/mobilekanjeevaram2.png"
+import mobilekanjeevaram3 from "../../assets/images/products/kanjeevaram/mobilekanjeevaram3.png"
+import mobilekanjeevaram4 from "../../assets/images/products/kanjeevaram/mobilekanjeevaram4.png"
+
 import pochampally1 from "../../assets/images/products/pochampally/pochampally1.png"
 import pochampally2 from "../../assets/images/products/pochampally/pochampally2.png"
 import pochampally3 from "../../assets/images/products/pochampally/pochampally3.png"
 import pochampally4 from "../../assets/images/products/pochampally/pochampally4.png"
 
+import mobilepochampally1 from "../../assets/images/products/pochampally/mobilepochampally1.png"
+import mobilepochampally2 from "../../assets/images/products/pochampally/mobilepochampally2.png"
+import mobilepochampally3 from "../../assets/images/products/pochampally/mobilepochampally3.png"
+import mobilepochampally4 from "../../assets/images/products/pochampally/mobilepochampally4.png"
+
 // Single source of truth for product data — used by both the home page
 // showcase (1 image per card) and the single product page (gallery).
-// Each product has its own gallery. images[0] is the hero on the
-// product page, the rest go in the gallery grid / mobile slider.
+// Each product has desktop `images` and `mobileImages` (same order).
+// images[0] is the hero on the product page, the rest go in the
+// gallery grid / mobile slider.
 
 const CLASSIC_GALLERY = [classic1, classic2, classic3, classic4];
 const PATOLA_GALLERY = [patola1, patola2, patola3, patola4];
@@ -47,6 +78,13 @@ const KANJEEVARAM_GALLERY = [kanjeevaram1, kanjeevaram2, kanjeevaram3, kanjeevar
 const PAITHANI_GALLERY = [paithani1, paithani2, paithani3, paithani4];
 const POCHAMPALLY_GALLERY = [pochampally1, pochampally2, pochampally3, pochampally4];
 const BANARASI_GALLERY = [banarasi1, banarasi2, banarasi3, banarasi4];
+
+const CLASSIC_MOBILE = [mobileclassic1, mobileclassic2, mobileclassic3, mobileclassic4];
+const PATOLA_MOBILE = [mobilepatola1, mobilepatola2, mobilepatola3, mobilepatola4];
+const KANJEEVARAM_MOBILE = [mobilekanjeevaram1, mobilekanjeevaram2, mobilekanjeevaram3, mobilekanjeevaram4];
+const PAITHANI_MOBILE = [mobilepaithani1, mobilepaithani2, mobilepaithani3, mobilepaithani4];
+const POCHAMPALLY_MOBILE = [mobilepochampally1, mobilepochampally2, mobilepochampally3, mobilepochampally4];
+const BANARASI_MOBILE = [mobilebanarasi1, mobilebanarasi2, mobilebanarasi3, mobilebanarasi4];
 
 // same 6 highlight cards on every product for now — edit per-product
 // later if some perfumes need different claims (e.g. not vegan)
@@ -71,6 +109,7 @@ export const PRODUCTS = [
         accentColor: "#1FA8A0",
         homeImage: home_classic,
         images: CLASSIC_GALLERY,
+        mobileImages: CLASSIC_MOBILE,
         description:
             "Dark amber wrapped in smoked oud - heavy, confident, built for rooms you want to be remembered in.",
         proTip:
@@ -91,6 +130,7 @@ export const PRODUCTS = [
         accentColor: "#1B2A6B",
         homeImage: home_patola,
         images: PATOLA_GALLERY,
+        mobileImages: PATOLA_MOBILE,
         description:
             "Jasmine opening into soft musk - a bright, wearable floral built for daylight and everyday wear.",
         proTip:
@@ -111,6 +151,7 @@ export const PRODUCTS = [
         accentColor: "#4B1D6B",
         homeImage: home_kanjeevaram,
         images: KANJEEVARAM_GALLERY,
+        mobileImages: KANJEEVARAM_MOBILE,
         description:
             "Citrus over cool cedar - sharp, clean, the kind of scent that wakes a room up.",
         proTip: "Great as a first-application scent — cologne-strength, best refreshed midday.",
@@ -129,6 +170,7 @@ export const PRODUCTS = [
         accentColor: "#C2185B",
         homeImage: home_paithani,
         images: PAITHANI_GALLERY,
+        mobileImages: PAITHANI_MOBILE,
         description:
             "Warm vanilla settled over sandalwood - soft, close to skin, the scent equivalent of a good sweater.",
         proTip: "Works beautifully layered under a heavier evening scent for added depth.",
@@ -147,6 +189,7 @@ export const PRODUCTS = [
         accentColor: "#1F4D2C",
         homeImage: home_pochampally,
         images: POCHAMPALLY_GALLERY,
+        mobileImages: POCHAMPALLY_MOBILE,
         description:
             "Bergamot and iris in balance - powdery, a little distant, built for someone hard to pin down.",
         proTip: "A single spray goes further than expected — this one is deceptively strong.",
@@ -165,6 +208,7 @@ export const PRODUCTS = [
         accentColor: "#6E1220",
         homeImage: home_banarasi,
         images: BANARASI_GALLERY,
+        mobileImages: BANARASI_MOBILE,
         description:
             "Warm spice over worn leather - bold, a little rough at the edges, meant for cold evenings.",
         proTip: "Pairs well with wool and heavier fabrics — the warmth reads stronger in winter.",

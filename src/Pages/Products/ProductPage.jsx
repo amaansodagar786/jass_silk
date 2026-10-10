@@ -11,6 +11,9 @@ gsap.registerPlugin(ScrollTrigger);
 
 const AUTOPLAY_MS = 4000;
 
+// same breakpoint as the mobile slider in ProductPage.scss
+const MOBILE_MEDIA = "(max-width: 640px)";
+
 // small hand-drawn icon set — no external icon library dependency
 function FeatureIcon({ name }) {
   const props = {
@@ -91,6 +94,17 @@ function spawnRipple(e) {
   gsap.to(ripple, { scale: 6, opacity: 0, duration: 0.7, ease: "power2.out" });
 }
 
+// desktop image by default, mobile image on screens <= 640px.
+// falls back to the desktop image if no mobile one exists.
+function ResponsiveImage({ src, mobileSrc, alt }) {
+  return (
+    <picture>
+      {mobileSrc && <source media={MOBILE_MEDIA} srcSet={mobileSrc} />}
+      <img src={src} alt={alt} />
+    </picture>
+  );
+}
+
 export default function ProductPage() {
   const { id } = useParams();
   const product = getProductById(id);
@@ -98,6 +112,7 @@ export default function ProductPage() {
   // hero uses images[0]; gallery (desktop grid + mobile slider) starts
   // from the 2nd image so the hero image isn't shown twice
   const galleryImages = product?.images?.slice(1) || [];
+  const mobileGalleryImages = product?.mobileImages?.slice(1) || [];
 
   const rootRef = useRef(null);
   const intervalRef = useRef(null);
@@ -236,7 +251,11 @@ export default function ProductPage() {
         <span className="js-product__hero-kicker">{product.tagline}</span>
 
         <div className="js-product__hero-media">
-          <img src={product.images[0]} alt={product.name} />
+          <ResponsiveImage
+            src={product.images[0]}
+            mobileSrc={product.mobileImages?.[0]}
+            alt={product.name}
+          />
         </div>
 
         <h1 className="js-product__hero-name">{product.name}</h1>
@@ -280,7 +299,11 @@ export default function ProductPage() {
                 onMouseMove={(e) => handleFrameMove(e, e.currentTarget)}
                 onMouseLeave={(e) => handleFrameLeave(e.currentTarget)}
               >
-                <img src={src} alt={`${product.name} — view ${i + 2}`} />
+                <ResponsiveImage
+                  src={src}
+                  mobileSrc={mobileGalleryImages[i]}
+                  alt={`${product.name} — view ${i + 2}`}
+                />
               </div>
             ))}
           </div>

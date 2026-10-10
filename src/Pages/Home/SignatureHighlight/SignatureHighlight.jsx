@@ -2,18 +2,21 @@ import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import "./SignatureHighlight.scss";
+
 import image1 from "../../../assets/images/home/note1.png"
 import image2 from "../../../assets/images/home/note2.png"
 import image3 from "../../../assets/images/home/note3.png"
+
+import mobileimage1 from "../../../assets/images/home/mobile-note1.png"
+import mobileimage2 from "../../../assets/images/home/note2.png"
+import mobileimage3 from "../../../assets/images/home/note3.png"
 
 gsap.registerPlugin(ScrollTrigger);
 
 // how much space to leave at top for the fixed/sticky nav while pinned
 const NAV_OFFSET = 0;
 
-// swap `image` for real client ingredient photography whenever it's ready —
-// these are free-license Unsplash placeholders for now (citrus, jasmine,
-// sandalwood — matched to each note, not generic/abstract)
+// `image` = desktop/tablet, `mobileImage` = used on screens <= 768px
 const STAGES = [
   {
     key: "top",
@@ -22,8 +25,8 @@ const STAGES = [
     notes: "Citrus · Bergamot",
     blurb: "Bright and immediate - the first breath of the fragrance.",
     tint: "#E8D5C4",
-    image:
-      image1,
+    image: image1,
+    mobileImage: mobileimage1,
   },
   {
     key: "heart",
@@ -32,8 +35,8 @@ const STAGES = [
     notes: "Jasmine · Amber",
     blurb: "Warm and floral - the soul that lingers through the day.",
     tint: "#C9A66B",
-    image:
-      image2,
+    image: image2,
+    mobileImage: mobileimage2,
   },
   {
     key: "base",
@@ -42,13 +45,14 @@ const STAGES = [
     notes: "Musk · Sandalwood",
     blurb: "Deep and grounding - what stays on skin long after.",
     tint: "#8A6A46",
-    image:
-      image3,
+    image: image3,
+    mobileImage: mobileimage3,
   },
 ];
 
-// Pass `images={[url1, url2, url3]}` to override any of the 3 stage photos
-export default function SignatureHighlight({ images = [] }) {
+// Pass `images={[url1, url2, url3]}` to override the desktop photos
+// Pass `mobileImages={[url1, url2, url3]}` to override the mobile photos
+export default function SignatureHighlight({ images = [], mobileImages = [] }) {
   const sectionRef = useRef(null);
   const pinRef = useRef(null);
   const chamberRef = useRef(null);
@@ -187,11 +191,21 @@ export default function SignatureHighlight({ images = [] }) {
       <div className="js-signature__pin" ref={pinRef}>
         <div className="js-signature__chamber" ref={chamberRef}>
           <div className="js-signature__grid">
-            {/* Sharp ingredient photography — one per stage, crossfading */}
+            {/* Sharp ingredient photography — one per stage, crossfading.
+                <picture> swaps to the mobile image at <= 768px */}
             <div className="js-signature__media">
               {STAGES.map((stage, i) => (
                 <div className="js-signature__media-frame" key={stage.key} ref={addMediaRef}>
-                  <img src={images[i] || stage.image} alt={`${stage.full} — ${stage.notes}`} />
+                  <picture>
+                    <source
+                      media="(max-width: 768px)"
+                      srcSet={mobileImages[i] || stage.mobileImage}
+                    />
+                    <img
+                      src={images[i] || stage.image}
+                      alt={`${stage.full} — ${stage.notes}`}
+                    />
+                  </picture>
                 </div>
               ))}
               <div className="js-signature__media-tint" aria-hidden="true" />
