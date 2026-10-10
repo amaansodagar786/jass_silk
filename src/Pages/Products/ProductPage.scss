@@ -199,6 +199,9 @@ $font-body: "Kanit", sans-serif;
     }
 
     &__gallery-frame {
+        // FIX: border is now counted INSIDE the width, so each slide is
+        // exactly 100% wide and the slider shift matches it perfectly
+        box-sizing: border-box;
         overflow: hidden;
         border-radius: 2px;
         border: 1px solid var(--accent, #{$gold});
@@ -511,7 +514,13 @@ $font-body: "Kanit", sans-serif;
         }
 
         &__gallery-frame {
+            // FIX: each slide is exactly one viewport wide, never shrinks
+            // or grows, so slide N always lines up with the shift
+            box-sizing: border-box;
             flex: 0 0 100%;
+            width: 100%;
+            min-width: 100%;
+            max-width: 100%;
             height: 50vh;
             grid-column: unset !important;
             grid-row: unset !important;
