@@ -14,7 +14,7 @@ import {
 } from "react-icons/fa6";
 import "./Footer.scss";
 
-import logo from "../../assets/images/logo/logo.png";
+import logo from "../../assets/images/logo/sfp.png";
 
 // adjust this relative path to wherever products.js actually lives
 import { PRODUCTS } from "../../Components/data/products";

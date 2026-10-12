@@ -1,246 +1,359 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { FaArrowLeftLong, FaArrowRightLong } from "react-icons/fa6";
 import "./SignatureHighlight.scss";
 
-import image1 from "../../../assets/images/home/note1.png"
-import image2 from "../../../assets/images/home/note2.png"
-import image3 from "../../../assets/images/home/note3.png"
-
-import mobileimage1 from "../../../assets/images/home/mobile-note1.png"
-import mobileimage2 from "../../../assets/images/home/note2.png"
-import mobileimage3 from "../../../assets/images/home/note3.png"
+// adjust this relative path to wherever products.js actually lives
+import { PRODUCTS } from "../../../Components/data/products";
 
 gsap.registerPlugin(ScrollTrigger);
 
-// how much space to leave at top for the fixed/sticky nav while pinned
-const NAV_OFFSET = 0;
-
-// `image` = desktop/tablet, `mobileImage` = used on screens <= 768px
+// pos = vertical position (%) of the dot on the image
 const STAGES = [
   {
     key: "top",
-    label: "Top",
-    full: "Top Notes",
+    name: "Top Notes",
+    pos: 22,
+    side: "left",
     notes: "Citrus · Bergamot",
     blurb: "Bright and immediate - the first breath of the fragrance.",
-    tint: "#E8D5C4",
-    image: image1,
-    mobileImage: mobileimage1,
   },
   {
     key: "heart",
-    label: "Heart",
-    full: "Heart Notes",
+    name: "Heart Notes",
+    pos: 50,
+    side: "right",
     notes: "Jasmine · Amber",
     blurb: "Warm and floral - the soul that lingers through the day.",
-    tint: "#C9A66B",
-    image: image2,
-    mobileImage: mobileimage2,
   },
   {
     key: "base",
-    label: "Base",
-    full: "Base Notes",
+    name: "Base Notes",
+    pos: 78,
+    side: "left",
     notes: "Musk · Sandalwood",
     blurb: "Deep and grounding - what stays on skin long after.",
-    tint: "#8A6A46",
-    image: image3,
-    mobileImage: mobileimage3,
   },
 ];
 
-// Pass `images={[url1, url2, url3]}` to override the desktop photos
-// Pass `mobileImages={[url1, url2, url3]}` to override the mobile photos
-export default function SignatureHighlight({ images = [], mobileImages = [] }) {
+const CYCLE_MS = 3200;
+
+function getData(product, stage) {
+  const n = product?.notes?.[stage.key];
+  if (!n) return { notes: stage.notes, blurb: stage.blurb };
+  if (typeof n === "string") return { notes: n, blurb: stage.blurb };
+  return { notes: n.notes || stage.notes, blurb: n.blurb || stage.blurb };
+}
+
+export default function SignatureHighlight() {
   const sectionRef = useRef(null);
-  const pinRef = useRef(null);
-  const chamberRef = useRef(null);
-  const mediaRefs = useRef([]);
-  const wordRefs = useRef([]);
-  const notesRefs = useRef([]);
-  const blurbRefs = useRef([]);
-  const numberRefs = useRef([]);
-  const spineRefs = useRef([]);
-  mediaRefs.current = [];
-  wordRefs.current = [];
-  notesRefs.current = [];
-  blurbRefs.current = [];
-  numberRefs.current = [];
-  spineRefs.current = [];
+  const swapRef = useRef(null);
+  const frameRef = useRef(null);
+  const imgRef = useRef(null);
+  const shimmerRef = useRef(null);
+  const switching = useRef(false);
+  const mounted = useRef(false);
+  const px = useRef(null);
+  const py = useRef(null);
 
-  const addMediaRef = (el) => el && mediaRefs.current.push(el);
-  const addWordRef = (el) => el && wordRefs.current.push(el);
-  const addNotesRef = (el) => el && notesRefs.current.push(el);
-  const addBlurbRef = (el) => el && blurbRefs.current.push(el);
-  const addNumberRef = (el) => el && numberRefs.current.push(el);
-  const addSpineRef = (el) => el && spineRefs.current.push(el);
+  const [pIndex, setPIndex] = useState(0);
+  const [hover, setHover] = useState(null);
+  const [cycle, setCycle] = useState(0);
 
+  const total = PRODUCTS.length;
+  const product = PRODUCTS[pIndex];
+  const src = product?.homeImage || product?.images?.[0];
+  const mobileSrc = product?.mobileImages?.[0];
+  const accentStyle = product?.accentColor ? { "--accent": product.accentColor } : undefined;
+  const active = hover !== null ? hover : cycle;
+
+  // ---------- first entrance (when section scrolls in) ----------
   useEffect(() => {
-    const mm = gsap.matchMedia();
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    // Desktop / tablet — pinned, scrubbed stage sequence, driven by one
-    // deterministic render(progress) function (proven stable pattern —
-    // avoids the GSAP tween-capture race that a discrete timeline hits
-    // inside a pinned + scrubbed ScrollTrigger).
-    mm.add("(min-width: 769px)", () => {
-      const ctx = gsap.context(() => {
-        const segMax = STAGES.length - 1;
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline({
+        scrollTrigger: { trigger: sectionRef.current, start: "top 70%", once: true },
+      });
 
-        function render(progress) {
-          const seg = progress * segMax;
-          const activeIdx = Math.round(Math.min(Math.max(seg, 0), segMax));
+      tl.fromTo(
+        ".js-signature__head > *",
+        { y: 20, autoAlpha: 0 },
+        { y: 0, autoAlpha: 1, duration: 0.7, ease: "power3.out", stagger: 0.1 }
+      )
+        .fromTo(
+          ".js-signature__switcher",
+          { y: 14, autoAlpha: 0 },
+          { y: 0, autoAlpha: 1, duration: 0.6, ease: "power3.out" },
+          "-=0.4"
+        )
+        .fromTo(
+          ".js-signature__frame",
+          { clipPath: "inset(100% 0% 0% 0%)" },
+          { clipPath: "inset(0% 0% 0% 0%)", duration: 1.1, ease: "power4.inOut" },
+          "-=0.3"
+        )
+        .fromTo(
+          ".js-signature__dot",
+          { scale: 0, autoAlpha: 0 },
+          { scale: 1, autoAlpha: 1, duration: 0.5, ease: "back.out(2.2)", stagger: 0.14 },
+          "-=0.3"
+        )
+        .fromTo(
+          ".js-signature__line",
+          { scaleX: 0 },
+          { scaleX: 1, duration: 0.7, ease: "power3.inOut", stagger: 0.14 },
+          "-=0.4"
+        )
+        .fromTo(
+          ".js-signature__callout-body",
+          { y: 14, autoAlpha: 0 },
+          { y: 0, autoAlpha: 1, duration: 0.6, ease: "power3.out", stagger: 0.14 },
+          "-=0.5"
+        )
+        .fromTo(
+          ".js-signature__nav",
+          { y: 14, autoAlpha: 0 },
+          { y: 0, autoAlpha: 1, duration: 0.6, ease: "power3.out" },
+          "-=0.4"
+        );
+    }, sectionRef);
 
-          STAGES.forEach((stage, i) => {
-            const dist = seg - i; // signed — direction drives parallax
-            const absDist = Math.abs(dist);
-            const alpha = Math.max(0, 1 - absDist);
-
-            gsap.set(mediaRefs.current[i], { autoAlpha: alpha, scale: 1.06 - alpha * 0.06 });
-
-            // layered parallax — each element moves at its own "depth":
-            // the ghost number is the slowest/furthest-back layer, the
-            // word is the fastest/nearest, notes + blurb sit in between
-            // with a slight horizontal drift for extra depth
-            gsap.set(numberRefs.current[i], { autoAlpha: alpha * 0.14, y: dist * 26 });
-            gsap.set(wordRefs.current[i], { autoAlpha: alpha, y: dist * 90, scale: 1 - absDist * 0.08 });
-            gsap.set(notesRefs.current[i], { autoAlpha: alpha, y: dist * 55, x: dist * 10 });
-            gsap.set(blurbRefs.current[i], { autoAlpha: alpha, y: dist * 70, x: dist * -14 });
-          });
-
-          gsap.set(chamberRef.current, { "--tint": STAGES[activeIdx].tint });
-          spineRefs.current.forEach((el, i) =>
-            el.classList.toggle("js-signature__spine-item--active", i === activeIdx)
-          );
-        }
-
-        ScrollTrigger.create({
-          trigger: sectionRef.current,
-          start: `top ${NAV_OFFSET}px`,
-          end: "+=200%",
-          scrub: 0.6,
-          pin: pinRef.current,
-          anticipatePin: 1,
-          onUpdate: (self) => render(self.progress),
-        });
-
-        render(0);
-      }, sectionRef);
-
-      return () => ctx.revert();
-    });
-
-    // Mobile — no pin, media stays sticky behind the text stages as they
-    // reveal in normal scroll flow
-    mm.add("(max-width: 768px)", () => {
-      const ctx = gsap.context(() => {
-        gsap.set(mediaRefs.current, { autoAlpha: 0 });
-        gsap.set(mediaRefs.current[0], { autoAlpha: 1 });
-        gsap.set(wordRefs.current, { autoAlpha: 1, y: 0, x: 0, scale: 1 });
-        gsap.set(notesRefs.current, { autoAlpha: 1, y: 0, x: 0 });
-        gsap.set(blurbRefs.current, { autoAlpha: 1, y: 0, x: 0 });
-        gsap.set(numberRefs.current, { autoAlpha: 0.14, y: 0 });
-
-        STAGES.forEach((_, i) => {
-          ScrollTrigger.create({
-            trigger: wordRefs.current[i],
-            start: "top 60%",
-            end: "bottom 40%",
-            onEnter: () => setActive(i),
-            onEnterBack: () => setActive(i),
-          });
-
-          // small standalone parallax drift on the ghost number as its
-          // own block scrolls through — independent of the active-stage
-          // crossfade logic above
-          gsap.fromTo(
-            numberRefs.current[i],
-            { y: -18 },
-            {
-              y: 18,
-              ease: "none",
-              scrollTrigger: {
-                trigger: wordRefs.current[i],
-                start: "top bottom",
-                end: "bottom top",
-                scrub: 0.6,
-              },
-            }
-          );
-        });
-
-        function setActive(idx) {
-          mediaRefs.current.forEach((el, ii) =>
-            gsap.to(el, { autoAlpha: ii === idx ? 1 : 0, duration: 0.5 })
-          );
-          gsap.to(chamberRef.current, { "--tint": STAGES[idx].tint, duration: 0.5 });
-          spineRefs.current.forEach((el, ii) =>
-            el.classList.toggle("js-signature__spine-item--active", ii === idx)
-          );
-        }
-      }, sectionRef);
-
-      return () => ctx.revert();
-    });
-
-    return () => mm.revert();
+    return () => ctx.revert();
   }, []);
 
+  // ---------- product changed → new content fades in, lines redraw ----------
+  useEffect(() => {
+    if (!mounted.current) {
+      mounted.current = true;
+      return;
+    }
+
+    const ctx = gsap.context(() => {
+      const tl = gsap.timeline();
+
+      tl.fromTo(
+        ".js-signature__frame",
+        { clipPath: "inset(0% 0% 0% 0%)", scale: 0.97 },
+        { scale: 1, duration: 0.8, ease: "power3.out" },
+        0
+      )
+        .fromTo(
+          ".js-signature__dot",
+          { scale: 0, autoAlpha: 0 },
+          { scale: 1, autoAlpha: 1, duration: 0.45, ease: "back.out(2.2)", stagger: 0.1 },
+          0.15
+        )
+        .fromTo(
+          ".js-signature__line",
+          { scaleX: 0 },
+          { scaleX: 1, duration: 0.6, ease: "power3.inOut", stagger: 0.1 },
+          0.3
+        )
+        .fromTo(
+          ".js-signature__callout-body",
+          { y: 12, autoAlpha: 0 },
+          { y: 0, autoAlpha: 1, duration: 0.5, ease: "power3.out", stagger: 0.1 },
+          0.4
+        )
+        .fromTo(
+          shimmerRef.current,
+          { xPercent: -130, autoAlpha: 1 },
+          { xPercent: 130, duration: 1.1, ease: "power2.inOut" },
+          0.1
+        )
+        .set(shimmerRef.current, { autoAlpha: 0 });
+
+      // swap wrapper was faded out in changeProduct — bring it back
+      gsap.to(swapRef.current, { autoAlpha: 1, y: 0, duration: 0.55, ease: "power3.out" });
+    }, sectionRef);
+
+    return () => ctx.revert();
+  }, [pIndex]);
+
+  // ---------- auto-highlight: notes light up one by one ----------
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (hover !== null) return;
+    const t = setInterval(() => setCycle((c) => (c + 1) % STAGES.length), CYCLE_MS);
+    return () => clearInterval(t);
+  }, [hover]);
+
+  // ---------- mouse parallax on the photo (desktop only) ----------
+  useEffect(() => {
+    if (!imgRef.current) return;
+    if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+    px.current = gsap.quickTo(imgRef.current, "x", { duration: 0.9, ease: "power3" });
+    py.current = gsap.quickTo(imgRef.current, "y", { duration: 0.9, ease: "power3" });
+  }, []);
+
+  const handleFrameMove = (e) => {
+    if (!px.current) return;
+    const r = frameRef.current.getBoundingClientRect();
+    px.current(((e.clientX - r.left) / r.width - 0.5) * -18);
+    py.current(((e.clientY - r.top) / r.height - 0.5) * -18);
+  };
+
+  const handleFrameLeave = () => {
+    px.current?.(0);
+    py.current?.(0);
+  };
+
+  // ---------- switch product: fade out → swap → fade in ----------
+  const changeProduct = (i) => {
+    const idx = (i + total) % total;
+    if (idx === pIndex || switching.current) return;
+    switching.current = true;
+    setHover(null);
+    gsap.to(swapRef.current, {
+      autoAlpha: 0,
+      y: -10,
+      duration: 0.3,
+      ease: "power2.in",
+      onComplete: () => {
+        setPIndex(idx);
+        setCycle(0);
+        switching.current = false;
+      },
+    });
+  };
+
+  const handlePrev = () => changeProduct(pIndex - 1);
+  const handleNext = () => changeProduct(pIndex + 1);
+
   return (
-    <section className="js-signature" ref={sectionRef}>
-      <div className="js-signature__pin" ref={pinRef}>
-        <div className="js-signature__chamber" ref={chamberRef}>
-          <div className="js-signature__grid">
-            {/* Sharp ingredient photography — one per stage, crossfading.
-                <picture> swaps to the mobile image at <= 768px */}
-            <div className="js-signature__media">
-              {STAGES.map((stage, i) => (
-                <div className="js-signature__media-frame" key={stage.key} ref={addMediaRef}>
-                  <picture>
-                    <source
-                      media="(max-width: 768px)"
-                      srcSet={mobileImages[i] || stage.mobileImage}
-                    />
-                    <img
-                      src={images[i] || stage.image}
-                      alt={`${stage.full} — ${stage.notes}`}
-                    />
-                  </picture>
-                </div>
+    <section className="js-signature" ref={sectionRef} style={accentStyle}>
+      <div className="js-signature__grain" aria-hidden="true" />
+
+      {/* ---------- header ---------- */}
+      <div className="js-signature__head">
+        <span className="js-signature__eyebrow">Fragrance Anatomy</span>
+        <h2 className="js-signature__title">Layer by Layer</h2>
+      </div>
+
+      {/* ---------- product tabs: always ONE line ---------- */}
+      <div className="js-signature__switcher" role="tablist" aria-label="Choose fragrance">
+        {PRODUCTS.map((p, i) => (
+          <button
+            key={p.id}
+            type="button"
+            role="tab"
+            aria-selected={i === pIndex}
+            className={`js-signature__switch ${i === pIndex ? "js-signature__switch--active" : ""}`}
+            onClick={() => changeProduct(i)}
+            data-cursor="link"
+          >
+            <span className="js-signature__switch-num">{String(i + 1).padStart(2, "0")}</span>
+            <span className="js-signature__switch-name">{p.name}</span>
+          </button>
+        ))}
+      </div>
+
+      <div className="js-signature__swap" ref={swapRef}>
+        <div className="js-signature__stage">
+          <span className="js-signature__ghost" aria-hidden="true">
+            {String(pIndex + 1).padStart(2, "0")}
+          </span>
+
+          <div className="js-signature__frame-wrap">
+            <div
+              className="js-signature__frame"
+              ref={frameRef}
+              onMouseMove={handleFrameMove}
+              onMouseLeave={handleFrameLeave}
+            >
+              <picture>
+                {mobileSrc && <source media="(max-width: 768px)" srcSet={mobileSrc} />}
+                <img ref={imgRef} src={src} alt={product?.name} draggable={false} />
+              </picture>
+
+              {STAGES.map((s, i) => (
+                <span
+                  key={s.key}
+                  className={`js-signature__band ${active === i ? "is-active" : ""}`}
+                  style={{ top: `${s.pos}%` }}
+                  aria-hidden="true"
+                />
               ))}
-              <div className="js-signature__media-tint" aria-hidden="true" />
+
+              <span className="js-signature__shimmer" ref={shimmerRef} aria-hidden="true" />
             </div>
 
-            <div className="js-signature__content">
-              {/* Side wayfinding spine */}
-              <div className="js-signature__spine">
-                {STAGES.map((stage, i) => (
-                  <span
-                    className={`js-signature__spine-item ${i === 0 ? "js-signature__spine-item--active" : ""}`}
-                    key={stage.key}
-                    ref={addSpineRef}
-                  >
-                    {stage.label}
-                  </span>
-                ))}
-              </div>
-
-              {/* Layered parallax stage text — ghost number sits behind
-                  as the slowest-moving depth layer */}
-              <div className="js-signature__stack">
-                {STAGES.map((stage, i) => (
-                  <div className="js-signature__stage-block" key={stage.key}>
-                    <span className="js-signature__ghost-number" ref={addNumberRef} aria-hidden="true">
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
-                    <span className="js-signature__word" ref={addWordRef}>{stage.full}</span>
-                    <span className="js-signature__word-notes" ref={addNotesRef}>{stage.notes}</span>
-                    <p className="js-signature__blurb" ref={addBlurbRef}>{stage.blurb}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
+            {STAGES.map((s, i) => (
+              <span
+                key={s.key}
+                className={`js-signature__dot ${active === i ? "is-active" : ""}`}
+                style={{ top: `${s.pos}%` }}
+                onMouseEnter={() => setHover(i)}
+                onMouseLeave={() => setHover(null)}
+                aria-hidden="true"
+              >
+                {i + 1}
+              </span>
+            ))}
           </div>
+
+          <div className="js-signature__rows">
+            {STAGES.map((s, i) => {
+              const d = getData(product, s);
+              return (
+                <div
+                  key={s.key}
+                  className={`js-signature__row js-signature__row--${s.side} ${active === i ? "is-active" : ""}`}
+                  style={{ top: `${s.pos}%` }}
+                  onMouseEnter={() => setHover(i)}
+                  onMouseLeave={() => setHover(null)}
+                >
+                  <div className="js-signature__callout">
+                    <span className="js-signature__line" aria-hidden="true" />
+                    <div className="js-signature__callout-body">
+                      <span className="js-signature__callout-num">0{i + 1}</span>
+                      <span className="js-signature__callout-name">{s.name}</span>
+                      <span className="js-signature__callout-notes">{d.notes}</span>
+                      <p className="js-signature__callout-blurb">{d.blurb}</p>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+
+      {/* ---------- bottom: progress (left) + arrows (right) ---------- */}
+      <div className="js-signature__nav">
+        <div className="js-signature__progress" aria-hidden="true">
+          <span className="js-signature__progress-count">
+            {String(pIndex + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
+          </span>
+          <span className="js-signature__progress-track">
+            <span
+              className="js-signature__progress-fill"
+              style={{ transform: `scaleX(${(pIndex + 1) / total})` }}
+            />
+          </span>
+        </div>
+
+        <div className="js-signature__arrows">
+          <button
+            type="button"
+            className="js-signature__arrow"
+            onClick={handlePrev}
+            aria-label="Previous fragrance"
+            data-cursor="link"
+          >
+            <FaArrowLeftLong />
+          </button>
+          <button
+            type="button"
+            className="js-signature__arrow"
+            onClick={handleNext}
+            aria-label="Next fragrance"
+            data-cursor="link"
+          >
+            <FaArrowRightLong />
+          </button>
         </div>
       </div>
     </section>

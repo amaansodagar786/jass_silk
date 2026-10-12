@@ -25,6 +25,22 @@ $nav-height-mobile: 64px;
         height 0.3s ease,
         transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
 
+    // soft dark fade behind the bar — only visible in the light (dark-hero) state,
+    // so text stays readable even over bright parts of the hero image
+    &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 150%;
+        z-index: -1;
+        background: linear-gradient(180deg, rgba($onyx, 0.6) 0%, rgba($onyx, 0) 100%);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.4s ease;
+    }
+
     &--solid {
         background: rgba($ivory, 0.92);
         backdrop-filter: blur(10px);
@@ -61,6 +77,29 @@ $nav-height-mobile: 64px;
         opacity: 0;
     }
 
+    // ── Light state: transparent bar sitting over the DARK hero ─────────
+    // (only while at the top of the page; scrolling / opening a panel removes it)
+    &--light::before {
+        opacity: 1;
+    }
+
+    &--light &__logo img {
+        filter: brightness(0) invert(1);
+    }
+
+    &--light &__collection-btn {
+        color: $ivory;
+    }
+
+    &--light &__burger span {
+        background: $ivory;
+    }
+
+    &--light &__cta {
+        color: $onyx;
+        background: $ivory;
+    }
+
     &__inner {
         position: relative;
         max-width: 1200px;
@@ -88,6 +127,7 @@ $nav-height-mobile: 64px;
         cursor: pointer;
         padding: 8px 0;
         position: relative;
+        transition: color 0.3s ease;
 
         &::after {
             content: "";
@@ -273,6 +313,7 @@ $nav-height-mobile: 64px;
         position: relative;
         overflow: hidden;
         z-index: 0;
+        transition: color 0.3s ease, background 0.3s ease;
 
         &::before {
             content: "";

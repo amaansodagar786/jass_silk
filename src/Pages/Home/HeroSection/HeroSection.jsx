@@ -2,11 +2,11 @@ import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import "./HeroSection.scss";
 
-import hero1 from "../../../assets/images/home/hero/hero.png"
-import mobilehero1 from "../../../assets/images/home/hero/mobile-hero.png"
+import hero1 from "../../../assets/images/home/hero/newhero.png"
+import mobilehero1 from "../../../assets/images/home/hero/newmobile-hero.png"
 
-import hero2 from "../../../assets/images/home/hero/middle-hero.png"
-import mobilehero2 from "../../../assets/images/home/hero/mobile-middle.png"
+import hero2 from "../../../assets/images/home/hero/newmiddle-hero.png"
+import mobilehero2 from "../../../assets/images/home/hero/newmobile-middle.png"
 
 
 
@@ -275,8 +275,8 @@ export default function HeroSection() {
                     </div>
                     <motion.div
                         className="js-hero-section__media-scrim"
-                        initial={{ opacity: 0.55 }}
-                        animate={{ opacity: 0.55 - visualProgress * 0.4 }}
+                        initial={{ opacity: 0.15 }}
+                        animate={{ opacity: 0.15 - visualProgress * 0.15 }}
                         transition={{ duration: 0.2 }}
                     />
                 </div>

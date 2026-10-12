@@ -28,10 +28,12 @@ $font-body: "Kanit", sans-serif;
     }
 
     &__bg-scrim {
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(180deg, rgba($onyx, 0.35) 0%, rgba($onyx, 0.15) 45%, rgba($onyx, 0.5) 100%);
-    }
+    position: absolute;
+    inset: 0;
+    background:
+        linear-gradient(rgba($onyx, 0.10), rgba($onyx, 0.15)),
+        linear-gradient(180deg, rgba($onyx, 0.35) 0%, rgba($onyx, 0.15) 45%, rgba($onyx, 0.5) 100%);
+}
 
     // ================= STAGE (expanding media + parting headline) =================
     &__stage {
@@ -52,7 +54,7 @@ $font-body: "Kanit", sans-serif;
         max-height: 85vh;
         overflow: hidden;
         border-radius: 6px;
-        box-shadow: 0 30px 70px -20px rgba($onyx, 0.5);
+        box-shadow: 0 30px 70px -20px rgba($onyx, 0);
         // width/height are driven inline by JS (scroll progress) —
         // only the transition easing lives here
         transition: border-radius 0.3s ease;

@@ -1,20 +1,25 @@
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence, useMotionValue, useSpring } from "framer-motion";
 import "./Nav.scss";
-import logo from "../../assets/images/logo/logo.png";
+import logo from "../../assets/images/logo/sfp.png";
 
 // adjust this relative path to wherever products.js actually lives
 import { PRODUCTS } from "../../Components/data/products";
 
 const EASE = [0.22, 1, 0.36, 1];
 
-export default function Nav() {
+// `darkHero` = page starts with a dark hero, so the bar uses light text until scrolled.
+// Left undefined, it switches on automatically for the home page ("/") only.
+export default function Nav({ darkHero }) {
     const [scrolled, setScrolled] = useState(false);
     const [hidden, setHidden] = useState(false);
     const [collectionOpen, setCollectionOpen] = useState(false);
     const [mobileOpen, setMobileOpen] = useState(false);
     const [activeId, setActiveId] = useState(PRODUCTS[0]?.id);
     const closeTimer = useRef(null);
+
+    const isDarkHero =
+        darkHero ?? (typeof window !== "undefined" && window.location.pathname === "/");
 
     // Gold thread under the bar = page scroll progress.
     // Computed by hand (not useScroll) so it works on any framer-motion version.
@@ -80,6 +85,8 @@ export default function Nav() {
         scrolled && "js-nav--solid",
         collectionOpen && "js-nav--open",
         mobileOpen && "js-nav--menu",
+        // light text/logo while the bar sits transparent over the dark hero
+        isDarkHero && !scrolled && !collectionOpen && !mobileOpen && "js-nav--light",
         hidden && !collectionOpen && !mobileOpen && "js-nav--hidden",
     ].filter(Boolean).join(" ");
 
