@@ -1,7 +1,7 @@
-$ivory: #F5F1EA;
+$ivory: #e8d0ae;
 $onyx: #1A1A1A;
-$gold: #C9A66B;
-$blush: #E8D5C4;
+$gold: #A67C3A;
+$blush: #F3E6D3;
 
 $font-heading: "Sora", sans-serif;
 $font-body: "Kanit", sans-serif;
@@ -22,7 +22,7 @@ $font-body: "Kanit", sans-serif;
         inset: 0;
         z-index: 2;
         pointer-events: none;
-        opacity: 0.045;
+        opacity: 0.05;
         mix-blend-mode: multiply;
         background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
         background-size: 160px 160px;
@@ -37,7 +37,7 @@ $font-body: "Kanit", sans-serif;
         margin-left: -210px;
         margin-top: -210px;
         border-radius: 50%;
-        background: radial-gradient(circle, rgba($gold, 0.35) 0%, rgba($blush, 0.2) 45%, transparent 70%);
+        background: radial-gradient(circle, rgba($gold, 0.4) 0%, rgba($blush, 0.3) 45%, transparent 70%);
         pointer-events: none;
         will-change: transform, opacity;
         filter: blur(4px);
@@ -53,7 +53,7 @@ $font-body: "Kanit", sans-serif;
         max-height: 480px;
         transform: translate(-50%, -50%);
         border-radius: 50%;
-        background: radial-gradient(circle, rgba($gold, 0.3) 0%, rgba($blush, 0.16) 45%, transparent 70%);
+        background: radial-gradient(circle, rgba($gold, 0.35) 0%, rgba($blush, 0.25) 45%, transparent 70%);
         filter: blur(6px);
         animation: js-exp-cursor-breathe 5s ease-in-out infinite;
     }
@@ -70,7 +70,7 @@ $font-body: "Kanit", sans-serif;
         font-weight: 300;
         font-size: 0.78rem;
         letter-spacing: 0.05em;
-        color: rgba($onyx, 0.5);
+        color: rgba($onyx, 0.7);
         margin-bottom: 14px;
     }
 
@@ -95,7 +95,7 @@ $font-body: "Kanit", sans-serif;
         font-weight: 300;
         font-size: 1.02rem;
         line-height: 1.6;
-        color: rgba($onyx, 0.65);
+        color: rgba($onyx, 0.75);
     }
 
     // Magnetic button with text-swap mask + click ripple
@@ -106,7 +106,7 @@ $font-body: "Kanit", sans-serif;
         font-weight: 400;
         font-size: 0.85rem;
         letter-spacing: 0.03em;
-        color: $ivory;
+        color: $blush;
         background: $onyx;
         padding: 15px 40px;
         text-decoration: none;
@@ -153,7 +153,7 @@ $font-body: "Kanit", sans-serif;
         height: 16px;
         margin: -8px 0 0 -8px;
         border-radius: 50%;
-        background: rgba($ivory, 0.5);
+        background: rgba($blush, 0.5);
         opacity: 0;
         pointer-events: none;
     }

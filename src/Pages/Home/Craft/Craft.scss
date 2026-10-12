@@ -1,7 +1,7 @@
-$ivory: #F5F1EA;
+$ivory: #e8d0ae;
 $onyx: #1A1A1A;
-$gold: #C9A66B;
-$blush: #E8D5C4;
+$gold: #A67C3A;
+$blush: #F3E6D3;
 
 $font-heading: "Sora", sans-serif;
 $font-body: "Kanit", sans-serif;
@@ -38,7 +38,7 @@ $font-body: "Kanit", sans-serif;
         font-weight: 300;
         font-size: 0.78rem;
         letter-spacing: 0.05em;
-        color: rgba($onyx, 0.5);
+        color: rgba($onyx, 0.7);
         margin-bottom: 12px;
     }
 
@@ -56,7 +56,7 @@ $font-body: "Kanit", sans-serif;
         font-weight: 300;
         font-size: 1rem;
         line-height: 1.6;
-        color: rgba($onyx, 0.65);
+        color: rgba($onyx, 0.75);
     }
 
     // --- The apothecary specimen row ---
@@ -110,7 +110,7 @@ $font-body: "Kanit", sans-serif;
         font-weight: 700;
         font-size: 5rem;
         line-height: 1;
-        color: rgba($ivory, 0.16);
+        color: rgba($blush, 0.2);
         mix-blend-mode: overlay;
         pointer-events: none;
     }
@@ -135,7 +135,7 @@ $font-body: "Kanit", sans-serif;
         font-size: 1.05rem;
         letter-spacing: 0.08em;
         text-transform: uppercase;
-        color: $ivory;
+        color: $blush;
         transition: opacity 0.35s ease;
     }
 
@@ -165,7 +165,7 @@ $font-body: "Kanit", sans-serif;
         font-family: $font-heading;
         font-weight: 600;
         font-size: 1.4rem;
-        color: $ivory;
+        color: $blush;
         margin-bottom: 8px;
     }
 
@@ -176,7 +176,7 @@ $font-body: "Kanit", sans-serif;
         font-weight: 300;
         font-size: 0.85rem;
         line-height: 1.55;
-        color: rgba($ivory, 0.75);
+        color: rgba($blush, 0.85);
     }
 
     // Magnifying lens — follows the cursor, shows a zoomed crop of the hovered panel
@@ -188,7 +188,7 @@ $font-body: "Kanit", sans-serif;
         margin: -65px 0 0 -65px;
         border-radius: 50%;
         border: 2px solid $gold;
-        box-shadow: 0 20px 40px -12px rgba($onyx, 0.5), inset 0 0 0 4px rgba($ivory, 0.15);
+        box-shadow: 0 20px 40px -12px rgba($onyx, 0.5), inset 0 0 0 4px rgba($blush, 0.2);
         pointer-events: none;
         background-repeat: no-repeat;
     }

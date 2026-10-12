@@ -1,7 +1,7 @@
-$ivory: #F5F1EA;
+$ivory: #e8d0ae;
 $onyx: #1A1A1A;
-$gold: #C9A66B;
-$blush: #E8D5C4;
+$gold: #A67C3A;
+$blush: #F3E6D3;
 
 $font-heading: "Sora", sans-serif;
 $font-body: "Kanit", sans-serif;
@@ -19,7 +19,7 @@ $font-body: "Kanit", sans-serif;
         inset: 0;
         z-index: 0;
         pointer-events: none;
-        opacity: 0.045;
+        opacity: 0.05;
         mix-blend-mode: multiply;
         background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
         background-size: 160px 160px;
@@ -35,7 +35,7 @@ $font-body: "Kanit", sans-serif;
         font-weight: 700;
         font-size: clamp(5rem, 13vw, 10rem);
         line-height: 1;
-        color: rgba($onyx, 0.04);
+        color: rgba($onyx, 0.055);
         text-transform: uppercase;
         letter-spacing: 0.02em;
         pointer-events: none;
@@ -59,7 +59,7 @@ $font-body: "Kanit", sans-serif;
         font-weight: 300;
         font-size: 0.78rem;
         letter-spacing: 0.05em;
-        color: rgba($onyx, 0.5);
+        color: rgba($onyx, 0.7);
         margin-bottom: 10px;
     }
 
@@ -81,9 +81,10 @@ $font-body: "Kanit", sans-serif;
         width: 46px;
         height: 46px;
         border-radius: 50%;
-        border: 1px solid rgba($onyx, 0.2);
-        background: transparent;
-        color: $onyx;
+        border: 1px solid rgba($onyx, 0.3);
+        background: $onyx;
+        
+        color: $ivory;
         font-size: 1rem;
         display: flex;
         align-items: center;
@@ -92,10 +93,11 @@ $font-body: "Kanit", sans-serif;
         transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease, transform 0.25s ease;
 
         &:hover:not(:disabled) {
-            background: $onyx;
-            color: $ivory;
+            background: transparent;
+            
             border-color: $onyx;
             transform: translateY(-2px);
+            color: $onyx;
         }
 
         &:disabled {
@@ -161,7 +163,7 @@ $font-body: "Kanit", sans-serif;
     &__sweep {
         position: absolute;
         inset: 0;
-        background: linear-gradient(115deg, transparent 40%, rgba($gold, 0.35) 50%, transparent 60%);
+        background: linear-gradient(115deg, transparent 40%, rgba($gold, 0.4) 50%, transparent 60%);
         transform: translateX(-140%);
         transition: transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
         pointer-events: none;
@@ -247,7 +249,7 @@ $font-body: "Kanit", sans-serif;
         top: 50%;
         width: 140px;
         height: 1px;
-        background: rgba($onyx, 0.15);
+        background: rgba($onyx, 0.25);
         transform: translate(-50%, -50%);
     }
 
@@ -258,7 +260,7 @@ $font-body: "Kanit", sans-serif;
         height: 7px;
         border-radius: 50%;
         background: $ivory;
-        border: 1px solid rgba($onyx, 0.3);
+        border: 1px solid rgba($onyx, 0.4);
         transition: background 0.35s ease, border-color 0.35s ease, transform 0.35s ease;
 
         &--active {
