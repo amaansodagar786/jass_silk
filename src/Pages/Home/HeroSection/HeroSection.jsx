@@ -22,7 +22,7 @@ const desktop_hero2 =
 const mobile_hero2 =
     mobilehero2;
 
-const HEADLINE_FIRST = "JASS";
+const HEADLINE_FIRST = "SFP";
 const HEADLINE_REST = "SILK";
 
 // scroll gesture reaches this fraction (0-1) before the hero "lets go"

@@ -6,7 +6,7 @@ import "./BrandIntro.scss";
 gsap.registerPlugin(ScrollTrigger);
 
 const LINES = [
-    "Every Jass Silk fragrance begins",
+    "Every Silk fragrance begins",
     "with a single thread -",
     "one note strong enough to define the rest.",
 ];
